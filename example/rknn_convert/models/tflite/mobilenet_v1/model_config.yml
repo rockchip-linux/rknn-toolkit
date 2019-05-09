@@ -1,0 +1,13 @@
+project-name: mobilenet_v1
+models:
+  mobilenet_v1:
+    platform: tflite
+    model_file_path: ../../../../mobilenet_v1/mobilenet_v1.tflite
+    quantize: true
+    source: text
+    dataset: ../../../../mobilenet_v1/dataset.txt
+    configs:
+      quantized_dtype: asymmetric_quantized-u8
+      batch_size: 1
+      channel_mean_value: 103.94 116.78 123.68 58.82
+      reorder_channel: 0 1 2

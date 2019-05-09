@@ -1,0 +1,34 @@
+3335,3367d3334
+< '@FeatureExtractor/MobilenetV2/expanded_conv/depthwise/depthwise_227:weight':
+<     dtype: asymmetric_quantized
+<     method: layer
+<     max_value:
+<     -   22.203540802001953
+<     min_value:
+<     -   -24.74886131286621
+<     zero_point:
+<     -   134
+<     scale:
+<     -   0.1841270625591278
+<     qtype: u8
+< '@FeatureExtractor/MobilenetV2/expanded_conv/depthwise/depthwise_227:bias':
+<     dtype: asymmetric_quantized
+<     method: layer
+<     max_value:
+<     min_value:
+<     zero_point: 0
+<     scale:
+<     -   0.0043324013240635395
+<     qtype: i32
+< '@FeatureExtractor/MobilenetV2/Conv/Relu6_228:out0':
+<     dtype: asymmetric_quantized
+<     method: layer
+<     max_value:
+<     -   6.0
+<     min_value:
+<     -   0.0
+<     zero_point:
+<     -   0
+<     scale:
+<     -   0.0235294122248888
+<     qtype: u8

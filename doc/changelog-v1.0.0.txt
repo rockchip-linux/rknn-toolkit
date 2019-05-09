@@ -1,0 +1,71 @@
+﻿2019-05-08
+版本：v1.0.0
+1. inference接口支持输入透传模式。
+2. 初始化运行环境时支持异步模型。
+3. 新功能：混合量化。
+4. 优化pre-compile模型的加载时间。新版本工具生成的预编译模型无法在NPU驱动版本号小于0.9.6的设备上运行；旧版本生成的预编译模型也无法在新版本驱动上运行。
+5. 调整模型推理结果的排列顺序：在1.0.0以前，如果原始模型输出的结果是按"NHWC"排列（例如TensorFlow模型），则工具会把结果转成"NCHW"；从1.0.0版本开始，将不做这个转换，而是保持跟原始模型的排列一致。
+
+2019-03-06
+版本：v0.9.9
+1. 新增eval_memory接口，用来获取模型运行时的内存使用情况。
+2. inference接口优化；错误信息优化。
+3. init_runtime接口优化。
+
+2019-02-01
+版本：v0.9.8
+1. 新增调试模式功能：通过在初始化RKNN对象时设置verbose和verbose_file参数，用户可以看到模型加载、构建等阶段的详细日志信息，并写到指定的文件中。
+
+2019-01-11 
+版本：v0.9.7.1
+1. bugfix：连续inference多帧会挂掉。
+2. 接口调整：init_runtime接口去掉host参数，工具会自动判断host。
+
+2018-12-29
+版本：v0.9.7
+1. 新增对RK3399Pro Linux硬件平台的支持。
+2. 调整RKNN初始化接口，移除target、device_id、perf_debug参数。
+3. 新增init_runtime接口，初始化运行时环境信息。
+4. load_tensorflow接口新增predef_file参数，以支持deepspeech2等语音模型。
+5. 调整inference接口，新增data_type、data_format参数。
+6. 合并get_run_duration、get_perf_detail_on_hardware、eval_perf三个接口为一个eval_perf，新增data_type、data_format参数。
+7. 新增SDK版本查询接口get_sdk_version。
+
+2018-11-24
+版本：v0.9.6
+1. 新增接口get_duration_time，用于联机调试时获取模型在硬件平台RK3399Pro上的运行时间。
+2. 新增接口get_perf_detail_on_hardware，用于联机调试时获取模型在硬件平台RK3399Pro上运行时每一层的耗时情况。
+
+2018-11-19
+版本：v0.9.5
+1. build接口支持npy文件作为量化校正数据的使用说明。
+2. build接口增加pre_compile参数。
+3. 新增接口load_onnx，支持导入onnx模型。
+4. 新增接口load_darknet，支持导入darknet模型。
+
+2018-11-03
+版本：v0.9.4
+1. 支持docker镜像方式安装、使用RKNN-Toolkit
+2. 添加接口get_run_duration，获取模型在硬件上完整运行一次所需要的时间。
+
+2018-10-24
+版本：v0.9.3
+1. 优化RKNN初始化接口，增加target、device_id参数，以支持连接RK3399Pro硬件。
+
+2018-10-12
+版本：v0.9.2
+1. 优化性能评估方式。
+
+2018-09-29
+版本：v0.9.1
+初始版本，实现模型转换、模型推理、模型性能评估功能，提供以下接口：
+1. load_tensorflow：加载TensorFlow模型。
+2. load_tflite：加载TensorFlow Lite模型。
+3. load_caffe：加载Caffe模型。
+4. config：模型配置，如通道均值、输入图片的通道顺序等。
+5. build：根据前面加载的TensorFlow、TensorFlow Lite或Caffe模型构建RKNN模型。
+6. load_rknn: 加载RKNN模型。
+7. export_rknn：导出RKNN模型。
+8. inference：运行模型，得到推理结果。
+9. eval_perf：运行模型，评估模型性能。
+10. release：释放RKNN对象。
