@@ -1,0 +1,15 @@
+__kernel void resizearea
+    (
+        __read_only image2d_array_t input,
+        __write_only image2d_array_t output,
+        __read_only vx_array_int size,
+        __read_only bool align_corners
+    )
+{
+    int4 dst_coord = (int4)(0, get_global_id(0), get_global_id(1), 0);
+    int4 src_coord = dst_coord >> 1;
+    vxc_short8 src0;
+    VXC_ReadImage2DArray(src0, input, src_coord, VXC_5BITOFFSET_XY(0, 0),\
+        VXC_MODIFIER(0, 2, 0, VXC_RM_TowardZero, 0));
+    VXC_WriteImage2DArray(output, dst_coord, src0, VXC_MODIFIER(0, 2, 0,VXC_RM_TowardZero, 0));
+}

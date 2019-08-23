@@ -100,8 +100,8 @@ if __name__ == '__main__':
     print('done')
     print('inference result: ', outputs)
 
-    predictions = outputs[1].reshape((1, NUM_RESULTS, 4))
-    outputClasses = outputs[0].reshape((1, NUM_RESULTS, NUM_CLASSES))
+    predictions = outputs[0].reshape((1, NUM_RESULTS, 4))
+    outputClasses = outputs[1].reshape((1, NUM_RESULTS, NUM_CLASSES))
     candidateBox = np.zeros([2, NUM_RESULTS], dtype=int)
     vaildCnt = 0
 

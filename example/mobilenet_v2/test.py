@@ -56,7 +56,7 @@ if __name__ == '__main__':
     print('done')
 
     # Set inputs
-    img = cv2.imread('./cat_224x224.jpg')
+    img = cv2.imread('./goldfish_224x224.jpg')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     print('--> Init runtime environment')

@@ -1,0 +1,10 @@
+name: TruncateDiv
+framework: tensorflow
+inputs:
+  input0:
+    type: VX_TYPE_TENSOR
+  input1:
+    type: VX_TYPE_TENSOR
+outputs:
+  output:
+    type: VX_TYPE_TENSOR

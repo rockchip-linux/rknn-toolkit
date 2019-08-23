@@ -1,0 +1,13 @@
+name: ResizeArea
+framework: tensorflow
+inputs:
+  input:
+    type: VX_TYPE_TENSOR
+outputs:
+  output:
+    type: VX_TYPE_TENSOR
+params:
+  size:
+    type: VX_TYPE_ARRAY
+  align_corners:
+    type: VX_TYPE_BOOL

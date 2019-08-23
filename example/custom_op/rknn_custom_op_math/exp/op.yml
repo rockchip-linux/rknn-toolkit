@@ -1,0 +1,12 @@
+name: Exp
+framework: tensorflow
+inputs:
+  input:
+    type: VX_TYPE_TENSOR
+outputs:
+  output:
+    type: VX_TYPE_TENSOR
+out_binary: Exp.rknnop
+op_py_file: rknn_op_exp.py
+vx_file: rknn_kernel_exp.vx
+kernel_index: 0
