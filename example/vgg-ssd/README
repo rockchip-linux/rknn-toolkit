@@ -1,0 +1,3 @@
+1. Download models_VGGNet_VOC0712_SSD_300x300.tar.gz from https://drive.google.com/file/d/0BzKzrI_SkD1_WVVTSmQxU0dVRzA/view
+2. Extract the VGG_VOC0712_SSD_300x300_iter_120000.caffemodel from models_VGGNet_VOC0712_SSD_300x300.tar.gz
+3. Or you can also download the caffemodel directly from https://eyun.baidu.com/s/3jJhPRzo , password is rknn

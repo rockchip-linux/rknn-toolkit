@@ -1,0 +1,21 @@
+name: "CaffeNet"
+layer {
+  name: "data"
+  type: "Input"
+  top: "data"
+  input_param { shape: { dim: 1 dim: 3 dim: 240 dim: 320 } }
+}
+
+layer {
+  name: "interp1"
+  type: "Resize"
+  bottom: "data"
+  top: "interp1"
+  resize_param {
+    height:480
+    width: 640
+    interp_mode:  1 
+  }
+}
+
+
