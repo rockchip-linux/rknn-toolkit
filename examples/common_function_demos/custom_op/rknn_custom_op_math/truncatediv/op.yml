@@ -1,0 +1,14 @@
+name: TruncateDiv
+framework: tensorflow
+inputs:
+  input0:
+    type: VX_TYPE_TENSOR
+  input1:
+    type: VX_TYPE_TENSOR
+outputs:
+  output:
+    type: VX_TYPE_TENSOR
+out_binary: TruncateDiv.rknnop
+op_py_file: rknn_op_truncatediv.py
+vx_file: rknn_kernel_truncatediv.vx
+kernel_index: 0

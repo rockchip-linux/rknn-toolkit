@@ -1,0 +1,21 @@
+project-name: mobilenet-ssd
+models:
+  mobilenet-ssd:
+    platform: tensorflow
+    model_file_path: ../../../../tensorflow/ssd_mobilenet_v1/ssd_mobilenet_v1_coco_2017_11_17.pb
+    subgraphs:
+        inputs:
+          - FeatureExtractor/MobilenetV1/MobilenetV1/Conv2d_0/BatchNorm/batchnorm/mul_1
+        input-size-list:
+          - 300,300,3
+        outputs:
+          - concat
+          - concat_1
+    quantize: true
+    source: text
+    dataset: ../../../../tensorflow/ssd_mobilenet_v1/dataset.txt
+    configs:
+      quantized_dtype: asymmetric_quantized-u8
+      batch_size: 1
+      channel_mean_value: 127.5 127.5 127.5 127.5
+      reorder_channel: 0 1 2

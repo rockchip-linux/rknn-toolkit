@@ -1,0 +1,8 @@
+name: Exp
+framework: tensorflow
+inputs:
+  input:
+    type: VX_TYPE_TENSOR
+outputs:
+  output:
+    type: VX_TYPE_TENSOR

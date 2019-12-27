@@ -1,0 +1,17 @@
+name: ResizeArea
+framework: tensorflow
+inputs:
+  input:
+    type: VX_TYPE_TENSOR
+outputs:
+  output:
+    type: VX_TYPE_TENSOR
+params:
+  size:
+    type: VX_TYPE_ARRAY
+  align_corners:
+    type: VX_TYPE_BOOL
+out_binary: ResizeArea.rknnop
+op_py_file: rknn_op_resizearea.py
+vx_file: rknn_kernel_resizearea.vx
+kernel_index: 0

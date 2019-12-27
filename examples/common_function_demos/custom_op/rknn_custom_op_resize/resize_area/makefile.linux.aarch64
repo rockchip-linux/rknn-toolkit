@@ -1,0 +1,9 @@
+BASE_DRIVER_INCLUDE:=-I/home/yhc/workspace/lion/rknn-toolkit/rknn-toolkit/rknn/simulator/include
+BASE_DRIVER_LIB:=-L/home/yhc/workspace/lion/rknn-toolkit/rknn-toolkit/rknn/simulator/lib/aarch64_linux -Wl,--no-as-needed -lOpenVX
+OUTDIR := ./.out/aarch64
+
+FLAGS := -fPIC
+
+all:
+	if [ ! -d $(OUTDIR) ]; then mkdir -p $(OUTDIR); else echo "$(OUTDIR) exist"; fi
+	$(CC) $(FLAGS) -shared $(BASE_DRIVER_INCLUDE) $(BASE_DRIVER_LIB) -o $(OUTDIR)/libresizearea.so rknn_kernel_resizearea.c
