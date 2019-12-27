@@ -1,0 +1,15 @@
+diff --git a/example/ssd_mobilenet_v2/ssd_mobilenet_v2.quantization.cfg b/example/ssd_mobilenet_v2/ssd_mobilenet_v2.quantization.cfg
+index 55e1b5e..568de6e 100644
+--- a/example/ssd_mobilenet_v2/ssd_mobilenet_v2.quantization.cfg
++++ b/example/ssd_mobilenet_v2/ssd_mobilenet_v2.quantization.cfg
+@@ -2,7 +2,9 @@
+ ---
+ # hybrid_quantization_action can be delete, add or modify, only one of these can be set at a hybrid quantization
+ hybrid_quantization_action: delete
+-customized_quantize_layers: {}
++customized_quantize_layers: {
++    FeatureExtractor/MobilenetV2/expanded_conv/depthwise/depthwise_227: float32
++}
+ quantize_parameters:
+     '@attach_concat_1/out0_0:out0':
+         dtype: asymmetric_affine

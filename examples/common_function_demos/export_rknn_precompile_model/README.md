@@ -1,0 +1,1 @@
+RKNN Toolkit does not support exporting precompiled rknn models from Windows and MacOS via the build() interface. The precompiled model needs to be exported via the interface export_rknn_precompile_model(). This interface requires a connection to the RK1808 device. (Note that RK3399pro does not support this feature)
