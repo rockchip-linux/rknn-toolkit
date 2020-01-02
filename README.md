@@ -3,8 +3,8 @@ RKNN-Toolkit is a software development kit for users to perform model conversion
 # Download
 From version 1.3.0, some wheel packages are larger than 100MB, can not be uploaded directly. So, you need to go to the releases page to download.
 You can download from releases page: https://github.com/rockchip-linux/rknn-toolkit/releases
-- All wheel packages are in compressed file: [rknn-toolkit-v1.3.0-packages.tar.gz](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.tar.gz "rknn-toolkit-v1.3.0-packages.tar.gz") or [rknn-toolkit-v1.3.0-packages.zip](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.tar.gz "rknn-toolkit-v1.3.0-packages.zip "rknn-toolkit-v1.3.0-packages.zip")
-- All examples, docs and platform-tools are in compressed file: [Source code(zip)](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0.zip "Source code(zip)") or [Source code(tar.gz)](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0.tar.gz "Source code(tar.gz)")
+- All wheel packages are in compressed file: [rknn-toolkit-v1.3.0-packages.tar.gz](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.tar.gz "rknn-toolkit-v1.3.0-packages.tar.gz") or [rknn-toolkit-v1.3.0-packages.zip](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.zip "rknn-toolkit-v1.3.0-packages.zip ")
+- All examples, docs and platform-tools are in compressed file: [Source code(zip)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.0.zip "Source code(zip)") or [Source code(tar.gz)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.0.tar.gz "Source code(tar.gz)")
 
 # Checksums
 ## MD5

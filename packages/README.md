@@ -3,8 +3,8 @@ Prior to version 1.3.0, all wheel packages of rknn-toolkit were placed in this d
 Since version 1.3.0, because some wheel packages are larger than 100MB and cannot be uploaded directly to github, you need to go to the releases page to download.
 # Download
 You can download from releases page: https://github.com/rockchip-linux/rknn-toolkit/releases
-- All wheel packages are in compressed file: [rknn-toolkit-v1.3.0-packages.tar.gz](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.tar.gz "rknn-toolkit-v1.3.0-packages.tar.gz") or [rknn-toolkit-v1.3.0-packages.zip](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.tar.gz "rknn-toolkit-v1.3.0-packages.zip "rknn-toolkit-v1.3.0-packages.zip")
-- All examples, docs and platform-tools are in compressed file: [Source code(zip)](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0.zip "Source code(zip)") or [Source code(tar.gz)](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0.tar.gz "Source code(tar.gz)")
+- All wheel packages are in compressed file: [rknn-toolkit-v1.3.0-packages.tar.gz](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.tar.gz "rknn-toolkit-v1.3.0-packages.tar.gz") or [rknn-toolkit-v1.3.0-packages.zip](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.0/rknn-toolkit-v1.3.0-packages.zip "rknn-toolkit-v1.3.0-packages.zip ")
+- All examples, docs and platform-tools are in compressed file: [Source code(zip)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.0.zip "Source code(zip)") or [Source code(tar.gz)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.0.tar.gz "Source code(tar.gz)")
 
 # Checksums
 ## MD5
