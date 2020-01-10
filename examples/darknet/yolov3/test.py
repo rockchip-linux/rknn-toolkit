@@ -11,6 +11,7 @@ from rknn.api import RKNN
 
 GRID0 = 13
 GRID1 = 26
+GRID2 = 52
 LISTSIZE = 85
 SPAN = 3
 NUM_CLS = 80
@@ -124,8 +125,12 @@ def nms_boxes(boxes, scores):
 
 def yolov3_post_process(input_data):
     # yolov3
-    masks = [[3, 4, 5], [0, 1, 2]]
-    anchors = [[10, 14], [23, 27], [37, 58], [81, 82], [135, 169], [344, 319]]
+    masks = [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
+    anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
+              [59, 119], [116, 90], [156, 198], [373, 326]]
+    # yolov3-tiny
+    # masks = [[3, 4, 5], [0, 1, 2]]
+    # anchors = [[10, 14], [23, 27], [37, 58], [81, 82], [135, 169], [344, 319]]
 
     boxes, classes, scores = [], [], []
     for input,mask in zip(input_data, masks):
@@ -222,7 +227,6 @@ if __name__ == '__main__':
     rknn = RKNN()
 
     NEED_BUILD_MODEL = True
-    # NEED_BUILD_MODEL = False
 
     if NEED_BUILD_MODEL:
         # Load caffe model
@@ -233,7 +237,7 @@ if __name__ == '__main__':
             exit(ret)
         print('done')
 
-        rknn.config(reorder_channel='2 1 0', channel_mean_value='0 0 0 255')
+        rknn.config(reorder_channel='0 1 2', channel_mean_value='0 0 0 255')
 
         # Build model
         print('--> Building model')
@@ -277,13 +281,16 @@ if __name__ == '__main__':
 
     input0_data = outputs[0]
     input1_data = outputs[1]
+    input2_data = outputs[2]
 
     input0_data = input0_data.reshape(SPAN, LISTSIZE, GRID0, GRID0)
     input1_data = input1_data.reshape(SPAN, LISTSIZE, GRID1, GRID1)
+    input2_data = input2_data.reshape(SPAN, LISTSIZE, GRID2, GRID2)
 
     input_data = []
     input_data.append(np.transpose(input0_data, (2, 3, 0, 1)))
     input_data.append(np.transpose(input1_data, (2, 3, 0, 1)))
+    input_data.append(np.transpose(input2_data, (2, 3, 0, 1)))
 
     boxes, classes, scores = yolov3_post_process(input_data)
 
