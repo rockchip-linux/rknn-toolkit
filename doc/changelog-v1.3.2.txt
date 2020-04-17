@@ -1,3 +1,16 @@
+2020-04-02
+版本：v1.3.2
+1. 增加对RV1109、RV1126的支持。
+2. 完善eval_perf功能，不再需要填输入参数。
+3. TensorFlow增加对reducemax的支持；完善对dilated convolution的支持。
+   TFLite增加对dilated convolution的支持。
+   Caffe增加对CRNN的支持。
+   ONNX增加对Gather和Cast的支持；完善对avg_pool的支持。
+   Pytorch增加对upsample_nearest2d, contiguous, softmax, permute, leaky_relu, prelue, log, deconv和sub的支持；完善对Reshape, Constant的支持。
+   MXNet增加对Crop, UpSampling, SoftmaxActivation, _minus_scalar, log的支持。
+   RKNN完善对reshape, concat, split的支持。
+4. 修复已知bug。
+
 2019-12-25
 版本：v1.3.0
 1. 解决创建RKNN对象时间过长的问题。

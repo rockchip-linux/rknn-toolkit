@@ -1,5 +1,6 @@
 name: ResizeArea
 framework: tensorflow
+target_platform: rk1808
 inputs:
   input:
     type: VX_TYPE_TENSOR

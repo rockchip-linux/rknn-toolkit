@@ -1,5 +1,6 @@
 name: TruncateDiv
 framework: tensorflow
+target_platform: rk1808
 inputs:
   input0:
     type: VX_TYPE_TENSOR

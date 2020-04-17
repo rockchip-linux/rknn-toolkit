@@ -1,6 +1,7 @@
-ccb5ba9f5aa02aca48bbccb49ea6ea54  rknn_toolkit-1.3.0-cp35-cp35m-linux_aarch64.whl
-6b00fa8a4ca7c44965158b643b074b8b  rknn_toolkit-1.3.0-cp35-cp35m-linux_x86_64.whl
-ea0936cddf76ad1e2067181e02e45dbd  rknn_toolkit-1.3.0-cp36-cp36m-linux_aarch64.whl
-2c61020fd70777c996181006144ac28b  rknn_toolkit-1.3.0-cp36-cp36m-linux_x86_64.whl
-52419f2b82f5b51ca9e3252c2228da3d  rknn_toolkit-1.3.0-cp36-cp36m-macosx_10_9_x86_64.whl
-541b4bc2ee0c6e2511f417afc511edee  rknn_toolkit-1.3.0-cp36-cp36m-win_amd64.whl
+994af6443c9c80d2a8fab32edf224d52  rknn_toolkit-1.3.2-cp35-cp35m-linux_aarch64.whl
+020c259f607f8edd40bce35ba7844b24  rknn_toolkit-1.3.2-cp35-cp35m-linux_x86_64.whl
+fac84285d95969d33b0dcbee5537a3f3  rknn_toolkit-1.3.2-cp36-cp36m-linux_x86_64.whl
+af0fc6e1e9647fa24a67b874ebd1985f  rknn_toolkit-1.3.2-cp36-cp36m-macosx_10_15_x86_64.whl
+71ad1d681f73f3d042750080988e4cdb  rknn_toolkit-1.3.2-cp36-cp36m-win_amd64.whl
+f1a64ecfe348ea285302855ebb8eebb8  rknn_toolkit-1.3.2-cp37-cp37m-linux_aarch64.whl
+5957c65f703baf372782d522aaa2e524  rknn_toolkit-1.3.2-cp37-cp37m-macosx_10_15_x86_64.whl

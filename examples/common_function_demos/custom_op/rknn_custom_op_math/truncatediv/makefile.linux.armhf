@@ -1,0 +1,9 @@
+BASE_DRIVER_INCLUDE:=-I/home/raul/work/python-env/rknn-package-tvenv/lib/python3.5/site-packages/rknn/simulator/LION/include
+BASE_DRIVER_LIB:=-L/home/raul/work/python-env/rknn-package-tvenv/lib/python3.5/site-packages/rknn/simulator/LION/lib/armhf_linux -Wl,--no-as-needed -lOpenVX
+OUTDIR := ./.out/armhf
+
+FLAGS := -fPIC
+
+all:
+	if [ ! -d $(OUTDIR) ]; then mkdir -p $(OUTDIR); else echo "$(OUTDIR) exist"; fi
+	$(CC) $(FLAGS) -shared $(BASE_DRIVER_INCLUDE) $(BASE_DRIVER_LIB) -o $(OUTDIR)/libtruncatediv.so rknn_kernel_truncatediv.c

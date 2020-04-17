@@ -1,5 +1,5 @@
-BASE_DRIVER_INCLUDE:=-I/home/yhc/workspace/lion/rknn-toolkit/rknn-toolkit/rknn/simulator/include
-BASE_DRIVER_LIB:=-L/home/yhc/workspace/lion/rknn-toolkit/rknn-toolkit/rknn/simulator/lib/aarch64_linux -Wl,--no-as-needed -lOpenVX
+BASE_DRIVER_INCLUDE:=-I/home/raul/work/python-env/rknn-package-tvenv/lib/python3.5/site-packages/rknn/simulator/LION/include
+BASE_DRIVER_LIB:=-L/home/raul/work/python-env/rknn-package-tvenv/lib/python3.5/site-packages/rknn/simulator/LION/lib/aarch64_linux -Wl,--no-as-needed -lOpenVX
 OUTDIR := ./.out/aarch64
 
 FLAGS := -fPIC

@@ -1,14 +1,16 @@
+target_platform: rk1808
+op_version: 2
+vx_file: rknn_kernel_truncatediv.vx
 name: TruncateDiv
-framework: tensorflow
-inputs:
-  input0:
-    type: VX_TYPE_TENSOR
-  input1:
-    type: VX_TYPE_TENSOR
+kernel_index: 0
+out_binary: TruncateDiv.rknnop
 outputs:
   output:
     type: VX_TYPE_TENSOR
-out_binary: TruncateDiv.rknnop
+inputs:
+  input1:
+    type: VX_TYPE_TENSOR
+  input0:
+    type: VX_TYPE_TENSOR
 op_py_file: rknn_op_truncatediv.py
-vx_file: rknn_kernel_truncatediv.vx
-kernel_index: 0
+framework: tensorflow
