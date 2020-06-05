@@ -5,7 +5,7 @@ From version 1.3.0, some wheel packages are larger than 100MB, can not be upload
 You can download from releases page: https://github.com/rockchip-linux/rknn-toolkit/releases
 - All wheel packages are in compressed file: [rknn-toolkit-v1.3.2-packages.tar.gz](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.2/rknn-toolkit-v1.3.2-packages.tar.gz "rknn-toolkit-v1.3.2-packages.tar.gz") or [rknn-toolkit-v1.3.2-packages.zip](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.2/rknn-toolkit-v1.3.2-packages.zip "rknn-toolkit-v1.3.2-packages.zip ")
 - All examples, docs and platform-tools are in compressed file: [Source code(zip)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.2.zip "Source code(zip)") or [Source code(tar.gz)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.2.tar.gz "Source code(tar.gz)")
-- You can also download all packages, docker image, examples, docs and platform-tools from baidu cloud: [rknn-toolkit-v1.3.2](https://eyun.baidu.com/s/3bqiKboV "rknn-toolkit-v1.3.2"), fetch code: rknn
+- You can also download all packages, docker image, examples, docs and platform-tools from baidu cloud: [rknn-toolkit-v1.3.2](https://eyun.baidu.com/s/3d1IWhC "rknn-toolkit-v1.3.2"), fetch code: rknn
 # Checksums
 ## MD5
 ```
