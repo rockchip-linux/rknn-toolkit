@@ -1,11 +1,11 @@
 # Introduction
-RKNN-Toolkit is a software development kit for users to perform model conversion, inference and performance evaluation on PC, RK3399Pro, RK1808, TB-RK1808S0 AI Compute Stick or RK3399Pro Linux development board.
+RKNN-Toolkit is a software development kit for users to perform model conversion, inference and performance evaluation on PC, RK3399Pro, RK1808, TB-RK1808S0 AI Compute Stick, RV1109, RV1126 or RK3399Pro Linux development board.
 # Download
 From version 1.3.0, some wheel packages are larger than 100MB, can not be uploaded directly. So, you need to go to the releases page to download.
 You can download from releases page: https://github.com/rockchip-linux/rknn-toolkit/releases
 - All wheel packages are in compressed file: [rknn-toolkit-v1.3.2-packages.tar.gz](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.2/rknn-toolkit-v1.3.2-packages.tar.gz "rknn-toolkit-v1.3.2-packages.tar.gz") or [rknn-toolkit-v1.3.2-packages.zip](https://github.com/rockchip-linux/rknn-toolkit/releases/download/v1.3.2/rknn-toolkit-v1.3.2-packages.zip "rknn-toolkit-v1.3.2-packages.zip ")
 - All examples, docs and platform-tools are in compressed file: [Source code(zip)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.2.zip "Source code(zip)") or [Source code(tar.gz)](https://github.com/rockchip-linux/rknn-toolkit/archive/v1.3.2.tar.gz "Source code(tar.gz)")
-
+- You can also download all packages, docker image, examples, docs and platform-tools from baidu cloud: [rknn-toolkit-v1.3.2](https://eyun.baidu.com/s/3bqiKboV "rknn-toolkit-v1.3.2"), fetch code: rknn
 # Checksums
 ## MD5
 ```
