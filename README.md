@@ -22,4 +22,8 @@ b24d5e9fc75ef2d578ae7570f20441bc  opencv_python_headless-4.0.1.23-cp35-cp35m-lin
 f17e3d626713cfdc094a42f6a1cd3083  rknn-toolkit-v1.3.2-packages.tar.gz
 460f1ea6698f514f34c0608b53e0449c  rknn-toolkit-v1.3.2-packages.zip
 ```
-
+# Feedback and Community Suport
+- Forum: Issues and Questions are welcome at out [Forum](http://t.rock-chips.com/forum.php)
+- QQ Group Chat: 1025468710
+<p align="center"><img width="200" height="200"  src="https://github.com/rockchip-linux/rknn-toolkit/blob/master/QQGroupQRCode.png"/></p>
+<p align="center">QQ Group Chat</p>
