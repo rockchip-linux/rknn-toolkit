@@ -23,7 +23,7 @@ f17e3d626713cfdc094a42f6a1cd3083  rknn-toolkit-v1.3.2-packages.tar.gz
 460f1ea6698f514f34c0608b53e0449c  rknn-toolkit-v1.3.2-packages.zip
 ```
 # Feedback and Community Suport
-- Forum: Issues and Questions are welcome at our [Forum](http://t.rock-chips.com/forum.php)
+- Forum: Issues and Questions are welcome at [Toybrick`s Forum](http://t.rock-chips.com/forum.php)
 - QQ Group Chat: 1025468710
 <p align="center"><img width="200" height="200"  src="https://github.com/rockchip-linux/rknn-toolkit/blob/master/QQGroupQRCode.png"/></p>
 <p align="center">QQ Group Chat</p>
