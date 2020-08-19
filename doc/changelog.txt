@@ -1,14 +1,26 @@
+2020-08-14
+版本：v1.4.0
+1. 新功能：增加逐层量化分析子功能；输入预处理支持多个std_value；支持从开发板导出预编译模型。
+2. 功能优化：优化channel_mean_value参数，改成mean_values/std_values；移除load_tensorflow接口中的mean_values和std_values；可视化完善对多输入的支持，增加对RK1806/RV1109/RV1126的支持；精度分析功能增加非归一化的余弦距离和欧式距离。
+3. TensorFlow：增加对dense子图的支持。
+    TFLite：增加对split_v的支持；完善对pad的支持。
+    ONNX：完善对prelu / deconvolution / avg_pool / clip的支持。
+    Pytorch：增加对pixel_shuffle, unsqueeze, sum,select, hardtanh, elu, slice, squeeze, exp,relu6, threshold_, matmul, exp, pad的支持；完善对adaptive_avg_pool2d,  upsample_bilinear, relu6的支持。
+    MXNet：完善对fc的支持。
+    Darknet: 增加对mish的支持；完善对route的支持。
+4. 修复已知bug。
+
 2020-04-02
 版本：v1.3.2
 1. 增加对RV1109、RV1126的支持。
 2. 完善eval_perf功能，不再需要填输入参数。
 3. TensorFlow增加对reducemax的支持；完善对dilated convolution的支持。
-   TFLite增加对dilated convolution的支持。
-   Caffe增加对CRNN的支持。
-   ONNX增加对Gather和Cast的支持；完善对avg_pool的支持。
-   Pytorch增加对upsample_nearest2d, contiguous, softmax, permute, leaky_relu, prelue, log, deconv和sub的支持；完善对Reshape, Constant的支持。
-   MXNet增加对Crop, UpSampling, SoftmaxActivation, _minus_scalar, log的支持。
-   RKNN完善对reshape, concat, split的支持。
+    TFLite增加对dilated convolution的支持。
+    Caffe增加对CRNN的支持。
+    ONNX增加对Gather和Cast的支持；完善对avg_pool的支持。
+    Pytorch增加对upsample_nearest2d, contiguous, softmax, permute, leaky_relu, prelue, log, deconv和sub的支持；完善对Reshape, Constant的支持。
+    MXNet增加对Crop, UpSampling, SoftmaxActivation, _minus_scalar, log的支持。
+    RKNN完善对reshape, concat, split的支持。
 4. 修复已知bug。
 
 2019-12-25
