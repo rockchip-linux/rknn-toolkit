@@ -17,7 +17,7 @@
 3. TensorFlow增加对reducemax的支持；完善对dilated convolution的支持。
     TFLite增加对dilated convolution的支持。
     Caffe增加对CRNN的支持。
-    ONNX增加对Gather和Cast的支持；完善对avg_pool的支持。
+    ONNX完善对avg_pool的支持。
     Pytorch增加对upsample_nearest2d, contiguous, softmax, permute, leaky_relu, prelue, log, deconv和sub的支持；完善对Reshape, Constant的支持。
     MXNet增加对Crop, UpSampling, SoftmaxActivation, _minus_scalar, log的支持。
     RKNN完善对reshape, concat, split的支持。
