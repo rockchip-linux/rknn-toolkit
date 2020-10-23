@@ -34,7 +34,6 @@ b24d5e9fc75ef2d578ae7570f20441bc  opencv_python_headless-4.0.1.23-cp35-cp35m-lin
 4fd89161bcb2a64ce2f71c0f63644b71  lmdb-0.95-cp36-cp36m-win_amd64.whl
 ```
 # Feedback and Community Suport
-- Forum: Issues and Questions are welcome at [Toybrick`s Forum](http://t.rock-chips.com/forum.php)
 - QQ Group Chat: 1025468710
 <p align="center"><img width="200" height="200"  src="https://github.com/rockchip-linux/rknn-toolkit/blob/master/QQGroupQRCode.png"/></p>
 <p align="center">QQ Group Chat</p>
