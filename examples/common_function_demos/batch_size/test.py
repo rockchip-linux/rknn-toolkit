@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # pre-process config
     print('--> config model')
-    rknn.config(channel_mean_value='103.94 116.78 123.68 58.82', reorder_channel='0 1 2',
+    rknn.config(mean_values=[[103.94, 116.78, 123.68]], std_values=[[58.82, 58.82, 58.82]], reorder_channel='0 1 2',
                 quantized_dtype='asymmetric_quantized-u8')
     print('done')
 

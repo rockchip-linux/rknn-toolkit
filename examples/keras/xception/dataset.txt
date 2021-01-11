@@ -1,0 +1,1 @@
+./goldfish_299x299.jpg

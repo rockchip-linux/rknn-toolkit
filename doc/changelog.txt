@@ -1,7 +1,32 @@
+2020-12-31
+版本：v1.6.0
+1. 新功能：
+    1.1 支持Keras框架，并且支持TF 2.0导出的h5模型；
+    1.2 支持Pytorch 1.6.0；
+    1.3 支持ONNX 1.6.0；
+    1.4 增加模型加密功能；
+    1.5 支持通过命令行输出已连接设备；
+    1.6 离线预编译支持多输入模型。
+2. 功能优化：
+    2.1 优化精度分析功能，完整模型比对时，遇到Conv+Relu等情况时，不再需要跳层比较；
+    2.2 优化RKNN模型预处理，提高模型推理性能；
+    2.3 优化性能分析功能，打印详情时，精简每层OP；
+    2.4 模型分段功能限制在RK1806/RK1808/RV1109/RV1126芯片范围；
+    2.5 docker镜像系统升级为Ubuntu 18.04，Python升级到3.6。
+3. 完善对各框架OP的支持。
+4. 修复已知问题。
+
 2020-08-14
 版本：v1.4.0
-1. 新功能：增加逐层量化分析子功能；输入预处理支持多个std_value；支持从开发板导出预编译模型。
-2. 功能优化：优化channel_mean_value参数，改成mean_values/std_values；移除load_tensorflow接口中的mean_values和std_values；可视化完善对多输入的支持，增加对RK1806/RV1109/RV1126的支持；精度分析功能增加非归一化的余弦距离和欧式距离。
+1. 新功能：
+    1.1 增加逐层量化分析子功能；
+    1.2 输入预处理支持多个std_value；
+    1.3 支持从开发板导出预编译模型。
+2. 功能优化：
+    1.1 优化channel_mean_value参数，改成mean_values/std_values；
+    1.2 移除load_tensorflow接口中的mean_values和std_values；
+    1.3 可视化完善对多输入的支持，增加对RK1806/RV1109/RV1126的支持；
+    1.4 精度分析功能增加非归一化的余弦距离和欧式距离。
 3. TensorFlow：增加对dense子图的支持。
     TFLite：增加对split_v的支持；完善对pad的支持。
     ONNX：完善对prelu / deconvolution / avg_pool / clip的支持。
@@ -17,7 +42,7 @@
 3. TensorFlow增加对reducemax的支持；完善对dilated convolution的支持。
     TFLite增加对dilated convolution的支持。
     Caffe增加对CRNN的支持。
-    ONNX完善对avg_pool的支持。
+    ONNX增加对Gather和Cast的支持；完善对avg_pool的支持。
     Pytorch增加对upsample_nearest2d, contiguous, softmax, permute, leaky_relu, prelue, log, deconv和sub的支持；完善对Reshape, Constant的支持。
     MXNet增加对Crop, UpSampling, SoftmaxActivation, _minus_scalar, log的支持。
     RKNN完善对reshape, concat, split的支持。

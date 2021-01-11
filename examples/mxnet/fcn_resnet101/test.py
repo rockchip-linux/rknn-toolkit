@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     # pre-process config
     print('--> config model')
-    rknn.config(channel_mean_value='123.675 116.28 103.53 57.63', reorder_channel='0 1 2')
+    rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[57.63, 57.63, 57.63]], reorder_channel='0 1 2')
     print('done')
 
     # Load mxnet model

@@ -9,7 +9,7 @@ if __name__ == '__main__':
     
     # pre-process config
     print('--> config model')
-    rknn.config(channel_mean_value='0 0 0 1', reorder_channel='2 1 0')
+    rknn.config(mean_values=[[0, 0, 0]], std_values=[[1, 1, 1]], reorder_channel='2 1 0')
     print('done')
 
     # Load tensorflow model
