@@ -201,7 +201,7 @@ The list of Pytorch OPs supported by RKNN Version 1.6.0 is as follows:
 |aten::_convolution|
 |aten::div|
 |aten::dropout|
-|aten::dropout_e|
+|aten::dropout_|
 |aten::elu|
 |aten::elu_|
 |aten::exp|
