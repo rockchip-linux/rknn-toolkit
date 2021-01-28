@@ -43,21 +43,21 @@ if __name__ == '__main__':
     export_pytorch_model()
 
     model = './resnet18.pt'
-    input_size_list = [[3,224,224]]
+    input_size_list = [[3, 224, 224]]
 
     # Create RKNN object
     rknn = RKNN()
 
     # pre-process config
-    print('--> config model')
+    print('--> Config model')
     rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[58.395, 58.395, 58.395]], reorder_channel='0 1 2')
     print('done')
 
-    # Load pytorch model
+    # Load Pytorch model
     print('--> Loading model')
     ret = rknn.load_pytorch(model=model, input_size_list=input_size_list)
     if ret != 0:
-        print('Load pytorch model failed!')
+        print('Load Pytorch model failed!')
         exit(ret)
     print('done')
 
@@ -65,11 +65,11 @@ if __name__ == '__main__':
     print('--> Building model')
     ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
     if ret != 0:
-        print('Build pytorch failed!')
+        print('Build model failed!')
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./resnet_18.rknn')
     if ret != 0:
@@ -77,13 +77,13 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    ret = rknn.load_rknn('./resnet_18.rknn')
+    # ret = rknn.load_rknn('./resnet_18.rknn')
 
     # Set inputs
     img = cv2.imread('./space_shuttle_224.jpg')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # init runtime environment
+    # Init runtime environment
     print('--> Init runtime environment')
     ret = rknn.init_runtime()
     if ret != 0:
@@ -94,13 +94,7 @@ if __name__ == '__main__':
     # Inference
     print('--> Running model')
     outputs = rknn.inference(inputs=[img])
-
     show_outputs(softmax(np.array(outputs[0][0])))
     print('done')
-
-    # # perf
-    # print('--> Begin evaluate model performance')
-    # perf_results = rknn.eval_perf(inputs=[img])
-    # print('done')
 
     rknn.release()

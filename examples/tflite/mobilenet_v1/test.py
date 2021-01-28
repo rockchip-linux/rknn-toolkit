@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from rknn.api import RKNN
 
+
 def show_outputs(outputs):
     output = outputs[0][0]
     output_sorted = sorted(output, reverse=True)
@@ -30,7 +31,7 @@ if __name__ == '__main__':
     rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]], reorder_channel='0 1 2')
     print('done')
 
-    # Load tensorflow model
+    # Load TFLite model
     print('--> Loading model')
     ret = rknn.load_tflite(model='./mobilenet_v1.tflite')
     if ret != 0:
@@ -46,7 +47,7 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./mobilenet_v1.rknn')
     if ret != 0:
@@ -58,7 +59,7 @@ if __name__ == '__main__':
     img = cv2.imread('./dog_224x224.jpg')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # init runtime environment
+    # Init runtime environment
     print('--> Init runtime environment')
     ret = rknn.init_runtime()
     if ret != 0:
@@ -73,7 +74,7 @@ if __name__ == '__main__':
     print('done')
 
     # perf
-    print('--> Begin evaluate model performance')
+    print('--> Evaluate model performance')
     perf_results = rknn.eval_perf(inputs=[img])
     print('done')
 

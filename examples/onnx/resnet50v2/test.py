@@ -80,11 +80,11 @@ if __name__ == '__main__':
         print('done')
     
     # pre-process config
-    print('--> config model')
+    print('--> Config model')
     rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[58.82, 58.82, 58.82]], reorder_channel='0 1 2')
     print('done')
 
-    # Load tensorflow model
+    # Load ONNX model
     print('--> Loading model')
     ret = rknn.load_onnx(model=ONNX_MODEL)
     if ret != 0:
@@ -96,11 +96,11 @@ if __name__ == '__main__':
     print('--> Building model')
     ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
     if ret != 0:
-        print('Build resnet50 failed!')
+        print('Build resnet50v2 failed!')
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn(RKNN_MODEL)
     if ret != 0:

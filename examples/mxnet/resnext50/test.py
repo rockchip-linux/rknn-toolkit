@@ -26,6 +26,7 @@ def show_top5(outputs):
     for i in range(5):
         print(reverse_sort_index[i], ':', output[reverse_sort_index[i]])
 
+
 def softmax(x):
     return np.exp(x)/sum(np.exp(x))
 
@@ -38,14 +39,14 @@ if __name__ == '__main__':
     rknn = RKNN()
     
     # pre-process config
-    print('--> config model')
+    print('--> Config model')
     rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[57.63, 57.63, 57.63]], reorder_channel='0 1 2')
     print('done')
 
     # Load mxnet model
     symbol = './resnext50_32x4d-symbol.json'
     params = './resnext50_32x4d-0000.params'
-    input_size_list = [[3,224,224]]
+    input_size_list = [[3, 224, 224]]
     print('--> Loading model')
     ret = rknn.load_mxnet(symbol, params, input_size_list)
     if ret != 0:
@@ -57,11 +58,11 @@ if __name__ == '__main__':
     print('--> Building model')
     ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
     if ret != 0:
-        print('Build mxnet model failed!')
+        print('Build model failed!')
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./resnext50_32x4d.rknn')
     if ret != 0:
@@ -73,9 +74,9 @@ if __name__ == '__main__':
     img = cv2.imread('./space_shuttle_224.jpg')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # init runtime environment
+    # Init runtime environment
     print('--> Init runtime environment')
-    #ret = rknn.init_runtime(target='rk1808')
+    # ret = rknn.init_runtime(target='rk1808')
     ret = rknn.init_runtime()
     if ret != 0:
         print('Init runtime environment failed')
@@ -87,11 +88,6 @@ if __name__ == '__main__':
     outputs = rknn.inference(inputs=[img])
     show_top5(outputs)
     print('done')
-
-    # # perf
-    # print('--> Begin evaluate model performance')
-    # perf_results = rknn.eval_perf(inputs=[img])
-    # print('done')
 
     rknn.release()
 

@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from rknn.api import RKNN
 
+
 def show_outputs(outputs):
     output = outputs[0].reshape(-1)
     output_sorted = sorted(output, reverse=True)
@@ -19,17 +20,18 @@ def show_outputs(outputs):
             top5_str += topi
     print(top5_str)
 
+
 if __name__ == '__main__':
 
     # Create RKNN object
     rknn = RKNN()
     
-    # pre-process config
-    print('--> config model')
+    # Set model config
+    print('--> Config model')
     rknn.config(mean_values=[[103.94, 116.78, 123.68]], std_values=[[58.82, 58.82, 58.82]], reorder_channel='2 1 0')
     print('done')
 
-    # Load tensorflow model
+    # Load caffe model
     print('--> Loading model')
     ret = rknn.load_caffe(model='./mobilenet_v2.prototxt',
                           proto='caffe',
@@ -47,7 +49,7 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./mobilenet_v2.rknn')
     if ret != 0:
@@ -72,8 +74,8 @@ if __name__ == '__main__':
     show_outputs(outputs)
     print('done')
 
-    # perf
-    print('--> Begin evaluate model performance')
+    # Evaluate model performance
+    print('--> Evaluate model performance')
     perf_results = rknn.eval_perf(inputs=[img])
     print('done')
 

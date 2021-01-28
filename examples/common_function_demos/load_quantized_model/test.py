@@ -16,6 +16,7 @@ OUTPUTS = ['InceptionV3/Logits/SpatialSqueeze']
 IMG_PATH = './goldfish_299x299.jpg'
 INPUT_SIZE = 299
 
+
 def show_outputs(outputs):
     output = outputs[0][0]
     output_sorted = sorted(output, reverse=True)
@@ -62,8 +63,8 @@ def show_progress(blocknum, blocksize, totalsize):
     f.flush()
     f.write('\r\n')
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN()
 
@@ -99,13 +100,13 @@ if __name__ == '__main__':
             shutil.rmtree(target_dir)
             os.remove(download_file)
         print('done')
-    # pre-process config
+    # Set model config
     print('--> Config model')
     rknn.config(reorder_channel='0 1 2')
     print('done')
 
-    # Load tensorflow model
-    print('--> Loading model')
+    # Load TensorFlow model
+    print('--> Loading TensorFlow model')
     ret = rknn.load_tensorflow(tf_pb=PB_FILE,
                                inputs=INPUTS,
                                outputs=OUTPUTS,
@@ -126,7 +127,7 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn(RKNN_MODEL_PATH)
     if ret != 0:
@@ -138,7 +139,7 @@ if __name__ == '__main__':
     img = cv2.imread(IMG_PATH)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # init runtime environment
+    # Init runtime environment
     print('--> Init runtime environment')
     # ret = rknn.init_runtime(target='rk1808')
     ret = rknn.init_runtime()
@@ -157,7 +158,7 @@ if __name__ == '__main__':
     print('done')
 
     # perf
-    print('--> Begin evaluate model performance')
+    print('--> Evaluate model performance')
     perf_results = rknn.eval_perf(inputs=[img])
     print('done')
 

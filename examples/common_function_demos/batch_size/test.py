@@ -22,23 +22,18 @@ def show_outputs(outputs):
         print(top5_str)
 
 
-def show_perfs(perfs):
-    perfs = 'perfs: {}\n'.format(outputs)
-    print(perfs)
-
-
 if __name__ == '__main__':
 
     # Create RKNN object
     rknn = RKNN(verbose=False)
 
-    # pre-process config
-    print('--> config model')
+    # Set model config
+    print('--> Config model')
     rknn.config(mean_values=[[103.94, 116.78, 123.68]], std_values=[[58.82, 58.82, 58.82]], reorder_channel='0 1 2',
                 quantized_dtype='asymmetric_quantized-u8')
     print('done')
 
-    # Load tensorflow model
+    # Load TFLite model
     print('--> Loading model')
     ret = rknn.load_tflite(model='../../tflite/mobilenet_v1/mobilenet_v1.tflite')
     if ret != 0:
@@ -70,7 +65,7 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
-    ret = rknn.init_runtime(target='rk1808')
+    ret = rknn.init_runtime()
     if ret != 0:
         print('Init runtime environment failed')
         exit(ret)

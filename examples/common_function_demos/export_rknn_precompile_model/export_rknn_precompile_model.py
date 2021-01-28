@@ -16,14 +16,14 @@ if __name__ == '__main__':
     rknn = RKNN()
     
     # Load rknn model
-    print('--> Export RKNN model')
+    print('--> Loading RKNN model')
     ret = rknn.load_rknn(orig_rknn)
     if ret != 0:
-        print('Load rknn failed!')
+        print('Load RKNN model failed!')
         exit(ret)
     print('done')
 
-    # init runtime environment
+    # Init runtime environment
     print('--> Init runtime environment')
 
     # Note: you must set rknn2precompile=True when call rknn.init_runtime()

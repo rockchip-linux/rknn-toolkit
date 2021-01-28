@@ -8,11 +8,11 @@ if __name__ == '__main__':
     rknn = RKNN()
     
     # model config
-    print('--> config model')
+    print('--> Config model')
     rknn.config(channel_mean_value='123.675 116.28 103.53 58.395', reorder_channel='0 1 2')
     print('done')
 
-    # Load pytorch model
+    # Load Pytorch model
     print('--> Loading model')
     ret = rknn.load_pytorch(model='./mnasnet0_5.pt', input_size_list=[[3, 224, 224]])
     if ret != 0:
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Build model
+    # Hybrid quantization step1
     print('--> hybrid_quantization_step1')
     ret = rknn.hybrid_quantization_step1(dataset='./dataset.txt')
     if ret != 0:

@@ -45,7 +45,6 @@ def decode_segmap(image, nc=21):
     return rgb
 
 
-
 if __name__ == '__main__':
 
     export_mxnet_model()
@@ -54,14 +53,14 @@ if __name__ == '__main__':
     rknn = RKNN()
 
     # pre-process config
-    print('--> config model')
+    print('--> Config model')
     rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[57.63, 57.63, 57.63]], reorder_channel='0 1 2')
     print('done')
 
     # Load mxnet model
     symbol = './fcn_resnet101_voc-symbol.json'
     params = './fcn_resnet101_voc-0000.params'
-    input_size_list = [[3,480,480]]
+    input_size_list = [[3, 480, 480]]
     print('--> Loading model')
     ret = rknn.load_mxnet(symbol, params, input_size_list)
     if ret != 0:
@@ -73,15 +72,15 @@ if __name__ == '__main__':
     print('--> Building model')
     ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
     if ret != 0:
-        print('Build mxnet model failed!')
+        print('Build model failed!')
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./fcn_resnet101_voc.rknn')
     if ret != 0:
-        print('Export mxnet model failed!')
+        print('Export RKNN model failed!')
         exit(ret)
     print('done')
 
@@ -91,7 +90,7 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
-    #ret = rknn.init_runtime(target='rk1808')
+    # ret = rknn.init_runtime(target='rk1808')
     ret = rknn.init_runtime()
     if ret != 0:
         print('Init runtime environment failed')
@@ -111,11 +110,6 @@ if __name__ == '__main__':
     cv2.imwrite('seg_image.jpg', overlapping)
 
     print('please open seg_image.jpg to see segmentation result.')
-
-    # # perf
-    # print('--> Begin evaluate model performance')
-    # perf_results = rknn.eval_perf(inputs=[img])
-    # print('done')
 
     rknn.release()
 

@@ -176,10 +176,10 @@ if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN()
     
-    #print('--> Load RKNN Model')
+    print('--> Load RKNN model')
     ret = rknn.load_rknn('./ssd_mobilenet_v2.rknn')
     if ret != 0:
-        print('load rknn model failed')
+        print('Load RKNN model failed')
         exit(ret)
     print('done')
 

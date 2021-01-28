@@ -8,7 +8,7 @@ import torch
 def export_pytorch_model():
     net = models.mnasnet0_5(pretrained=True)
     net.eval()
-    trace_model = torch.jit.trace(net, torch.Tensor(1,3,224,224))
+    trace_model = torch.jit.trace(net, torch.Tensor(1, 3, 224, 224))
     trace_model.save('./mnasnet0_5.pt')
 
 
@@ -41,7 +41,7 @@ def softmax(x):
 if __name__ == '__main__':
 
     # Create RKNN object
-    rknn = RKNN(verbose=True)
+    rknn = RKNN()
 
     # Load RKNN model
     print('--> Load RKNN model')
@@ -57,8 +57,8 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
-    #ret = rknn.init_runtime()
-    ret = rknn.init_runtime(target='rk1808', device_id='1808s1')
+    ret = rknn.init_runtime()
+    # ret = rknn.init_runtime(target='rk1808', device_id='1808s1')
     if ret != 0:
         print('Init runtime environment failed')
         exit(ret)
@@ -67,7 +67,6 @@ if __name__ == '__main__':
     # Inference
     print('--> Running model')
     outputs = rknn.inference(inputs=[img])
-
     show_outputs(softmax(np.array(outputs[0][0])))
     print('done')
 

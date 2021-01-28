@@ -7,12 +7,12 @@ if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN()
     
-    # pre-process config
-    print('--> config model')
+    # Set model config
+    print('--> Config model')
     rknn.config(mean_values=[[0, 0, 0]], std_values=[[1, 1, 1]], reorder_channel='2 1 0')
     print('done')
 
-    # Load tensorflow model
+    # Load Caffe model
     print('--> Loading model')
     ret = rknn.load_caffe(model='./deploy.prototxt',
                           proto='caffe',
@@ -30,7 +30,7 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./interp_test.rknn')
     if ret != 0:
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     new_img = np.reshape(np.transpose(np.reshape(result, (3, 480* 640))), (480, 640,3))
 
     cv2.imshow("image", old_img)
-    cv2.imshow("new image",new_img)
+    cv2.imshow("new image", new_img)
     cv2.waitKey(5000)
     cv2.destroyAllWindows()
 

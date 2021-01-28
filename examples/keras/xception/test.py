@@ -50,12 +50,12 @@ if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN()
 
-    # pre-process config
-    print('--> config model')
+    # Set model config
+    print('--> Config model')
     rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]], reorder_channel='0 1 2')
     print('done')
 
-    # Load keras model
+    # Load Keras model
     print('--> Loading model')
     ret = rknn.load_keras(model=KERAS_MODEL_PATH)
     if ret != 0:
@@ -67,11 +67,11 @@ if __name__ == '__main__':
     print('--> Building model')
     ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
     if ret != 0:
-        print('Build pytorch failed!')
+        print('Build model failed!')
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./xception.rknn')
     if ret != 0:
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     # init runtime environment
     print('--> Init runtime environment')
     ret = rknn.init_runtime()
-    #ret = rknn.init_runtime(target='rk1808')
+    # ret = rknn.init_runtime(target='rk1808')
     if ret != 0:
         print('Init runtime environment failed')
         exit(ret)
@@ -97,8 +97,6 @@ if __name__ == '__main__':
     # Inference
     print('--> Running model')
     outputs = rknn.inference(inputs=[img])
-    #outputs[0].tofile('out.txt', '\n')
-
     show_outputs(outputs)
     print('done')
 

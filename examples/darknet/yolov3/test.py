@@ -229,11 +229,11 @@ if __name__ == '__main__':
     NEED_BUILD_MODEL = True
 
     if NEED_BUILD_MODEL:
-        # Load caffe model
+        # Load darknet model
         print('--> Loading model')
         ret = rknn.load_darknet(model=MODEL_PATH, weight=WEIGHT_PATH)
         if ret != 0:
-            print('load caffe model failed!')
+            print('Load darknet model failed!')
             exit(ret)
         print('done')
 
@@ -243,15 +243,15 @@ if __name__ == '__main__':
         print('--> Building model')
         ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
         if ret != 0:
-            print('build model failed.')
+            print('Build model failed.')
             exit(ret)
         print('done')
 
-        # Export rknn model
+        # Export RKNN model
         print('--> Export RKNN model')
         ret = rknn.export_rknn(RKNN_MODEL_PATH)
         if ret != 0:
-            print('Export rknn model failed.')
+            print('Export RKNN model failed.')
             exit(ret)
         print('done')
     else:
@@ -259,23 +259,23 @@ if __name__ == '__main__':
         print('Loading RKNN model')
         ret = rknn.load_rknn(RKNN_MODEL_PATH)
         if ret != 0:
-            print('load rknn model failed.')
+            print('Load RKNN model failed.')
             exit(ret)
         print('done')
 
-    print('--> init runtime')
-    # ret = rknn.init_runtime()
+    # Init runtime environment
+    print('--> Init runtime environment')
     ret = rknn.init_runtime()
     if ret != 0:
-        print('init runtime failed.')
+        print('Init runtime environment failed.')
         exit(ret)
     print('done')
 
     img = cv2.imread(im_file)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # inference
-    print('--> inference')
+    # Inference
+    print('--> Running model')
     outputs = rknn.inference(inputs=[img])
     print('done')
 
@@ -287,7 +287,7 @@ if __name__ == '__main__':
     input1_data = input1_data.reshape(SPAN, LISTSIZE, GRID1, GRID1)
     input2_data = input2_data.reshape(SPAN, LISTSIZE, GRID2, GRID2)
 
-    input_data = []
+    input_data = list()
     input_data.append(np.transpose(input0_data, (2, 3, 0, 1)))
     input_data.append(np.transpose(input1_data, (2, 3, 0, 1)))
     input_data.append(np.transpose(input2_data, (2, 3, 0, 1)))

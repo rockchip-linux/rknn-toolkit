@@ -158,12 +158,12 @@ if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN(verbose=False)
 
-    # pre-process config
-    print('--> config model')
+    # Set model config
+    print('--> Config model')
     rknn.config(mean_values=[[103.94, 116.78, 123.68]], std_values=[[1, 1, 1]], reorder_channel='2 1 0')
     print('done')
 
-    # Load tensorflow model
+    # Load caffe model
     print('--> Loading model')
     ret = rknn.load_caffe(model='./deploy_rm_detection_output.prototxt',
                           proto='caffe',
@@ -181,7 +181,7 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Export rknn model
+    # Export RKNN model
     print('--> Export RKNN model')
     ret = rknn.export_rknn('./deploy_rm_detection_output.rknn')
     if ret != 0:

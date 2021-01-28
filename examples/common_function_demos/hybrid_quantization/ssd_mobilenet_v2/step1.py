@@ -7,12 +7,12 @@ if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN()
     
-    # pre-process config
-    print('--> config model')
+    # Set model config
+    print('--> Config model')
     rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]], reorder_channel='0 1 2', quantized_dtype='asymmetric_quantized-u8', batch_size=16)
     print('done')
 
-    # Load tflite model
+    # Load tensorflow model
     print('--> Loading model')
     ret = rknn.load_tensorflow(tf_pb='./ssd_mobilenet_v2.pb',
                                inputs=['FeatureExtractor/MobilenetV2/MobilenetV2/input'],
@@ -24,7 +24,7 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    # Build model
+    # Hybrid quantization step1
     print('--> hybrid_quantization_step1')
     ret = rknn.hybrid_quantization_step1(dataset='./dataset.txt')
     if ret != 0:

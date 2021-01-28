@@ -23,7 +23,7 @@ def convert_model(model_path, out_path, pre_compile):
     else:
         yaml_config_file = os.path.join(model_path, 'model_config.yml')
     if not os.path.exists(yaml_config_file):
-        print('model config % not exist!' % yaml_config_file)
+        print('model config {} not exist!'.format(yaml_config_file))
         exit(-1)
 
     model_configs = parse_model_config(yaml_config_file)

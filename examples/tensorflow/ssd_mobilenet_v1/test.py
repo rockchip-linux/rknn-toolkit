@@ -21,8 +21,10 @@ W_SCALE = 5.0
 def expit(x):
     return 1. / (1. + math.exp(-x))
 
+
 def unexpit(y):
     return -1.0 * math.log((1.0 / y) - 1.0);
+
 
 def CalculateOverlap(xmin0, ymin0, xmax0, ymax0, xmin1, ymin1, xmax1, ymax1):
     w = max(0.0, min(xmax0, xmax1) - max(xmin0, xmin1))
@@ -53,30 +55,42 @@ def load_box_priors():
     return box_priors
 
 
-
 if __name__ == '__main__':
 
     # Create RKNN object
     rknn = RKNN()
 
     # Config for Model Input PreProcess
+    print('--> Config model')
     rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]], reorder_channel='0 1 2')
+    print('done')
 
     # Load TensorFlow Model
     print('--> Loading model')
-    rknn.load_tensorflow(tf_pb='./ssd_mobilenet_v1_coco_2017_11_17.pb',
-                         inputs=['FeatureExtractor/MobilenetV1/MobilenetV1/Conv2d_0/BatchNorm/batchnorm/mul_1'],
-                         outputs=['concat', 'concat_1'],
-                         input_size_list=[[INPUT_SIZE, INPUT_SIZE, 3]])
+    ret = rknn.load_tensorflow(tf_pb='./ssd_mobilenet_v1_coco_2017_11_17.pb',
+                               inputs=['FeatureExtractor/MobilenetV1/MobilenetV1/Conv2d_0/BatchNorm/batchnorm/mul_1'],
+                               outputs=['concat', 'concat_1'],
+                               input_size_list=[[INPUT_SIZE, INPUT_SIZE, 3]])
+    if ret != 0:
+        print('Load model failed!')
+        exit(ret)
     print('done')
 
     # Build Model
     print('--> Building model')
-    rknn.build(do_quantization=True, dataset='./dataset.txt')
+    ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
+    if ret != 0:
+        print('Build model failed!')
+        exit(ret)
     print('done')
 
     # Export RKNN Model
+    print('--> Export RKNN model')
     rknn.export_rknn('./ssd_mobilenet_v1_coco.rknn')
+    if ret != 0:
+        print('Export RKNN model failed!')
+        exit(ret)
+    print('done')
 
     # Direct Load RKNN Model
     # rknn.load_rknn('./ssd_mobilenet_v1_coco.rknn')
@@ -173,8 +187,6 @@ if __name__ == '__main__':
             if iou >= 0.45:
                 candidateBox[0][j] = -1
 
-
-
     # Draw result
     for i in range(0, vaildCnt):
         if candidateBox[0][i] == -1:
@@ -189,12 +201,14 @@ if __name__ == '__main__':
 
         # print("%d @ (%d, %d) (%d, %d) score=%f" % (topClassScoreIndex, xmin, ymin, xmax, ymax, topClassScore))
         cv2.rectangle(orig_img, (int(xmin), int(ymin)), (int(xmax), int(ymax)),
-             (random.random()*255, random.random()*255, random.random()*255), 3)
+                      (random.random()*255, random.random()*255, random.random()*255), 3)
 
     cv2.imwrite("out.jpg", orig_img)
 
     # Evaluate Perf on Simulator
+    print('--> Evaluate model performance')
     rknn.eval_perf(inputs=[img], is_print=True)
+    print('done')
 
     # Release RKNN Context
     rknn.release()
