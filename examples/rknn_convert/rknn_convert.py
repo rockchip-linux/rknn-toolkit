@@ -42,15 +42,11 @@ def convert_model(config_path, out_path, pre_compile):
         print('--> Load model...')
         model_file_path = os.path.join(config_path, model['model_file_path'])
         if model['platform'] == 'tensorflow':
-            input_size_list = []
-            for input_size_str in model['subgraphs']['input-size-list']:
-                input_size = list(map(int, input_size_str.split(',')))
-                input_size_list.append(input_size)
-            pass
+            subgraphs = model['subgraphs']
             rknn.load_tensorflow(tf_pb=model_file_path,
-                                 inputs=model['subgraphs']['inputs'],
-                                 outputs=model['subgraphs']['outputs'],
-                                 input_size_list=input_size_list)
+                                 inputs=subgraphs['inputs'],
+                                 outputs=subgraphs['outputs'],
+                                 input_size_list=subgraphs['input_tensor_shapes'])
         elif model['platform'] == 'tflite':
             rknn.load_tflite(model=model_file_path)
         elif model['platform'] == 'onnx':
