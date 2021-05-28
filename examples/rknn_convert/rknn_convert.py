@@ -16,18 +16,11 @@ def parse_model_config(config_file):
         return yaml.load(config_text)
 
 
-def convert_model(config_path, out_path, pre_compile):
+def convert_model(config_file, out_path, pre_compile):
+
+    config_path = os.path.dirname(config_file)
+
     exported_rknn_model_paths = []
-
-    if os.path.isfile(config_path):
-        config_file = os.path.abspath(config_path)
-        config_path = os.path.dirname(config_file)
-    else:
-        config_file = os.path.join(config_path, 'model_config.yml')
-    if not os.path.exists(config_file):
-        print('Model config {:} not exist!'.format(config_file))
-        return exported_rknn_model_paths
-
     config = parse_model_config(config_file)
     if config is None:
         print('Invalid configuration.')
@@ -93,10 +86,10 @@ def parse_args(*argv):
 
 
 if __name__ == '__main__':
-    config_path, out_path, pre_compile = parse_args(*sys.argv[1:])
-    #print(config_path, out_path, pre_compile)
+    config_file, out_path, pre_compile = parse_args(*sys.argv[1:])
+    #print(config_file, out_path, pre_compile)
 
     if out_path:
         os.makedirs(out_path, exist_ok=True)
 
-    convert_model(config_path, out_path, pre_compile)
+    convert_model(config_file, out_path, pre_compile)
