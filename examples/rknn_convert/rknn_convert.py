@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 
-import os
 import sys
-
-#import yaml
+import os
 import ruamel.yaml
 from rknn.api import RKNN
 
-yaml = ruamel.yaml.YAML(typ='rt')
 
-def parse_model_config(yaml_config_file):
-    with open(yaml_config_file) as f:
-        yaml_config = f.read()
-    model_configs = yaml.load(yaml_config)
-    return model_configs
+def parse_model_config(config_file):
+    config_text = ""
+    with open(config_file) as f:
+        config_text = f.read()
+    if config_text:
+        yaml = ruamel.yaml.YAML(typ='rt')
+        return yaml.load(config_text)
 
 
 def convert_model(config_path, out_path, pre_compile):
@@ -23,21 +22,23 @@ def convert_model(config_path, out_path, pre_compile):
     else:
         config_file = os.path.join(config_path, 'model_config.yml')
     if not os.path.exists(config_file):
-        print('model config {} not exist!'.format(config_file))
+        print('Model config {:} not exist!'.format(config_file))
         exit(-1)
 
-    model_configs = parse_model_config(config_file)
+    exported_rknn_model_paths = []
+    config = parse_model_config(config_file)
+    if config is None:
+        print('Invalid configuration.')
+        return exported_rknn_model_paths
 
-    exported_rknn_model_path_list = []
-
-    for model_name in model_configs['models']:
-        model = model_configs['models'][model_name]
+    for model_name in config['models']:
+        model = config['models'][model_name]
 
         rknn = RKNN()
 
         rknn.config(**model['configs'])
 
-        print('--> Loading model...')
+        print('--> Load model...')
         if model['platform'] == 'tensorflow':
             model_file_path = os.path.join(config_path, model['model_file_path'])
             input_size_list = []
@@ -62,7 +63,7 @@ def convert_model(config_path, out_path, pre_compile):
         else:
             print("Platform {:} is not supported! Moving on.".format(model['platform']))
             continue
-        print('done')
+        print('Done')
 
         if model['quantize']:
             dataset_path = os.path.join(config_path, model['dataset'])
@@ -71,15 +72,15 @@ def convert_model(config_path, out_path, pre_compile):
 
         print('--> Build RKNN model...')
         rknn.build(do_quantization=model['quantize'], dataset=dataset_path, pre_compile=pre_compile)
-        print('done')
+        print('Done')
 
-        export_rknn_model_path = "%s.rknn" % (os.path.join(out_path, model_name))
-        print('--> Export RKNN model to: {}'.format(export_rknn_model_path))
+        export_rknn_model_path = "{:}.rknn".format(os.path.join(out_path, model_name))
+        print('--> Export RKNN model to: {:}'.format(export_rknn_model_path))
         rknn.export_rknn(export_path=export_rknn_model_path)
-        exported_rknn_model_path_list.append(export_rknn_model_path)
-        print('done')
+        exported_rknn_model_paths.append(export_rknn_model_path)
+        print('Done')
 
-    return exported_rknn_model_path_list
+    return exported_rknn_model_paths
 
 
 if __name__ == '__main__':
