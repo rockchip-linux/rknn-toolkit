@@ -1,5 +1,3 @@
-import numpy as np
-import cv2
 from rknn.api import RKNN
 
 if __name__ == '__main__':
@@ -9,7 +7,7 @@ if __name__ == '__main__':
     
     # model config
     print('--> Config model')
-    rknn.config(channel_mean_value='123.675 116.28 103.53 58.395', reorder_channel='0 1 2')
+    rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[58.395, 58.395, 58.395]], reorder_channel='0 1 2')
     print('done')
 
     # Load Pytorch model
@@ -33,6 +31,7 @@ if __name__ == '__main__':
     print('==================================================================================================')
     print('Modify method:')
     print('Add {layer_name}: {quantized_dtype} to dict of customized_quantize_layers')
+    print('If no layer changed, please set {} as empty directory for customized_quantize_layers')
     print('==================================================================================================')
     print('Notes:')
     print('1. The layer_name comes from quantize_parameters, please strip \'@\' and \':xxx\';')

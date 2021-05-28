@@ -1,5 +1,3 @@
-import numpy as np
-import cv2
 from rknn.api import RKNN
 
 if __name__ == '__main__':
@@ -7,8 +5,8 @@ if __name__ == '__main__':
     # Create RKNN object
     rknn = RKNN()
     
-    # pre-process config
-    print('--> config model')
+    # Set model config
+    print('--> Config model')
     rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]],
                 reorder_channel='0 1 2', batch_size=16)
     print('done')

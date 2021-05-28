@@ -48,24 +48,24 @@ def ssd_post_process(conf_data, loc_data):
     prior_bboxes = prior_data[:len(loc_data)]
     prior_variances = prior_data[len(loc_data):]
 
-    prior_num = int(len(loc_data) / 4) # 8732
+    prior_num = int(len(loc_data) / 4)  # 8732
     
-    conf_data = conf_data.reshape(-1,21)
+    conf_data = conf_data.reshape(-1, 21)
    
     idx_class_conf = []
     bboxes = [] 
     
     # conf
-    for prior_idx in range(0,prior_num):
+    for prior_idx in range(0, prior_num):
         max_val = np.max(conf_data[prior_idx])
         max_idx = np.argmax(conf_data[prior_idx])
         if max_val > CONF_THRESH and max_idx != 0:
             idx_class_conf.append([prior_idx, max_idx, max_val])
     
-    #print(len(idx_class_conf))    
+    #print(len(idx_class_conf))
             
     # boxes
-    for i in range(0,prior_num):
+    for i in range(0, prior_num):
         prior_w = prior_bboxes[4*i+2] - prior_bboxes[4*i]
         prior_h = prior_bboxes[4*i+3] - prior_bboxes[4*i+1]
         prior_center_x = (prior_bboxes[4*i+2] + prior_bboxes[4*i]) / 2
@@ -145,6 +145,7 @@ def ssd_post_process(conf_data, loc_data):
 
     np.copyto(img, np.array(img_pil))
     cv2.imwrite("result.jpg", img)
+
 
 if __name__ == '__main__':
 

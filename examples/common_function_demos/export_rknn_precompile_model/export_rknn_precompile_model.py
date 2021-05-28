@@ -27,6 +27,7 @@ if __name__ == '__main__':
     print('--> Init runtime environment')
 
     # Note: you must set rknn2precompile=True when call rknn.init_runtime()
+    #       RK3399Pro with android system does not support this function.
     ret = rknn.init_runtime(target='rk1808', rknn2precompile=True)
     if ret != 0:
         print('Init runtime environment failed')
