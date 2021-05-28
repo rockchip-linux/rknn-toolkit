@@ -171,6 +171,7 @@ def ssd_post_process(conf_data, loc_data, imgpath, output_dir='.'):
     cv2.imwrite("{}{}_quant.jpg".format(output_dir, name), img)
     print('write output image finished.')
 
+
 if __name__ == '__main__':
 
     # Create RKNN object

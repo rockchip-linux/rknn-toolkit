@@ -29,11 +29,6 @@ def show_outputs(output):
     print(top5_str)
 
 
-def show_perfs(perfs):
-    perfs = 'perfs: {}\n'.format(perfs)
-    print(perfs)
-
-
 def softmax(x):
     return np.exp(x)/sum(np.exp(x))
 

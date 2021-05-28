@@ -102,7 +102,7 @@ if __name__ == '__main__':
         print('done')
     # Set model config
     print('--> Config model')
-    rknn.config(reorder_channel='0 1 2')
+    rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[128, 128, 128]], reorder_channel='0 1 2')
     print('done')
 
     # Load TensorFlow model
@@ -111,9 +111,7 @@ if __name__ == '__main__':
                                inputs=INPUTS,
                                outputs=OUTPUTS,
                                input_size_list=[[INPUT_SIZE, INPUT_SIZE, 3]],
-                               predef_file=None,
-                               mean_values='127.5',
-                               std_values='128')
+                               predef_file=None)
     if ret != 0:
         print('Load inception_v3_quant_frozen failed!')
         exit(ret)

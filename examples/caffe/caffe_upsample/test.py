@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     result = outputs[0].astype(np.uint8)
 
-    new_img = np.reshape(np.transpose(np.reshape(result, (3, 480* 640))), (480, 640,3))
+    new_img = np.reshape(np.transpose(np.reshape(result, (3, 480 * 640))), (480, 640, 3))
 
     cv2.imshow("image", old_img)
     cv2.imshow("new image", new_img)

@@ -1,5 +1,3 @@
-import numpy as np
-import cv2
 from rknn.api import RKNN
 
 if __name__ == '__main__':
@@ -9,7 +7,7 @@ if __name__ == '__main__':
     
     # Set model config
     print('--> config model')
-    rknn.config(channel_mean_value='123.675 116.28 103.53 58.395', reorder_channel='0 1 2')
+    rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[58.395, 58.395, 58.395]], reorder_channel='0 1 2')
     print('done')
 
     # Hybrid quantization step2

@@ -10,6 +10,7 @@ from rknn.api import RKNN
 KERAS_MODEL_PATH = './xception.h5'
 IMG_PATH = 'goldfish_299x299.jpg'
 
+
 def export_keras_model():
     if not os.path.exists(KERAS_MODEL_PATH):
         model = Xception(weights='imagenet')
@@ -24,6 +25,7 @@ def export_keras_model():
         print('Keras Predicted:', decode_predictions(preds, top=5)[0])
 
         model.save(KERAS_MODEL_PATH)
+
 
 def show_outputs(outputs):
     output = outputs[0].reshape(-1)

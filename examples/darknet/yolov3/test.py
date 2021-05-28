@@ -195,6 +195,7 @@ def draw(image, boxes, scores, classes):
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.6, (0, 0, 255), 2)
 
+
 def download_yolov3_weight(dst_path):
     if os.path.exists(dst_path):
         print('yolov3.weight exist.')
@@ -211,6 +212,7 @@ def download_yolov3_weight(dst_path):
         print('URLError reason: ', e.reason)
     else:
         print('Download yolov3.weight success.') 
+
 
 if __name__ == '__main__':
 
