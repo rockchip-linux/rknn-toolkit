@@ -60,7 +60,8 @@ def convert_model(model_path, out_path, pre_compile):
             model_file_path = os.path.join(model_path, model['model_file_path'])
             rknn.load_onnx(model=model_file_path)
         else:
-            print("platform %s not support!" % (model['platform']))
+            print("Platform {:} is not supported! Moving on.".format(model['platform']))
+            continue
         print('done')
 
         if model['quantize']:
