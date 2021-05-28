@@ -1,4 +1,4 @@
-tensorflow-gpu==1.14.0
+tensorflow-gpu==2.5.0
 torch==1.5.1
 torchvision==0.4.0
 mxnet-cu101==1.5.0
