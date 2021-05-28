@@ -2,6 +2,7 @@
 
 import sys
 import os
+import argparse
 import ruamel.yaml
 from rknn.api import RKNN
 
@@ -78,9 +79,24 @@ def convert_model(config_path, out_path, pre_compile):
     return exported_rknn_model_paths
 
 
+def parse_args(*argv):
+    parser = argparse.ArgumentParser(description="Build RKNN models")
+    parser.add_argument("-c", "--config", required=True)
+    parser.add_argument("-o", "--out_dir", required=True)
+    parser.add_argument("-p", "--precompile", action="store_true")
+    args = parser.parse_args(argv)
+
+    if not os.path.isfile(args.config):
+        print("Enter an existing config file.")
+        sys.exit(-1)
+    return args.config, args.out_dir, args.precompile
+
+
 if __name__ == '__main__':
-    config_path = sys.argv[1]
-    out_path = sys.argv[2]
-    pre_compile = sys.argv[3] in ['true', '1', 'True']
+    config_path, out_path, pre_compile = parse_args(*sys.argv[1:])
+    #print(config_path, out_path, pre_compile)
+
+    if out_path:
+        os.makedirs(out_path, exist_ok=True)
 
     convert_model(config_path, out_path, pre_compile)
