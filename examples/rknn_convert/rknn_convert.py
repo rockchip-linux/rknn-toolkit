@@ -16,6 +16,8 @@ def parse_model_config(config_file):
 
 
 def convert_model(config_path, out_path, pre_compile):
+    exported_rknn_model_paths = []
+
     if os.path.isfile(config_path):
         config_file = os.path.abspath(config_path)
         config_path = os.path.dirname(config_file)
@@ -23,9 +25,8 @@ def convert_model(config_path, out_path, pre_compile):
         config_file = os.path.join(config_path, 'model_config.yml')
     if not os.path.exists(config_file):
         print('Model config {:} not exist!'.format(config_file))
-        exit(-1)
+        return exported_rknn_model_paths
 
-    exported_rknn_model_paths = []
     config = parse_model_config(config_file)
     if config is None:
         print('Invalid configuration.')
@@ -39,8 +40,8 @@ def convert_model(config_path, out_path, pre_compile):
         rknn.config(**model['configs'])
 
         print('--> Load model...')
+        model_file_path = os.path.join(config_path, model['model_file_path'])
         if model['platform'] == 'tensorflow':
-            model_file_path = os.path.join(config_path, model['model_file_path'])
             input_size_list = []
             for input_size_str in model['subgraphs']['input-size-list']:
                 input_size = list(map(int, input_size_str.split(',')))
@@ -51,15 +52,13 @@ def convert_model(config_path, out_path, pre_compile):
                                  outputs=model['subgraphs']['outputs'],
                                  input_size_list=input_size_list)
         elif model['platform'] == 'tflite':
-            model_file_path = os.path.join(config_path, model['model_file_path'])
             rknn.load_tflite(model=model_file_path)
-        elif model['platform'] == 'caffe':
-            prototxt_file_path = os.path.join(config_path,model['prototxt_file_path'])
-            caffemodel_file_path = os.path.join(config_path,model['caffemodel_file_path'])
-            rknn.load_caffe(model=prototxt_file_path, proto='caffe', blobs=caffemodel_file_path)
         elif model['platform'] == 'onnx':
-            model_file_path = os.path.join(config_path, model['model_file_path'])
             rknn.load_onnx(model=model_file_path)
+        elif model['platform'] == 'caffe':
+            prototxt_file_path = os.path.join(config_path, model['prototxt_file_path'])
+            caffemodel_file_path = os.path.join(config_path, model['caffemodel_file_path'])
+            rknn.load_caffe(model=prototxt_file_path, proto='caffe', blobs=caffemodel_file_path)
         else:
             print("Platform {:} is not supported! Moving on.".format(model['platform']))
             continue
