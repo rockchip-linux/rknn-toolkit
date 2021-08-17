@@ -86,7 +86,10 @@ if __name__ == '__main__':
 
     # Load ONNX model
     print('--> Loading model')
-    ret = rknn.load_onnx(model=ONNX_MODEL)
+    ret = rknn.load_onnx(model=ONNX_MODEL,
+                         inputs=['data'],
+                         input_size_list=[[3, 224, 224]],
+                         outputs=['resnetv24_dense0_fwd'])
     if ret != 0:
         print('Load resnet50v2 failed!')
         exit(ret)

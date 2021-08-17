@@ -31,8 +31,6 @@ if __name__ == '__main__':
         exit(ret)
     print('done')
 
-    rknn.export_rknn("ssd_mobilenet_v2.rknn")
-
     # Tips
     print('Please modify ssd_mobilenet_v2.quantization.cfg!')
     print('==================================================================================================')

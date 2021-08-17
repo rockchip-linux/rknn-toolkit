@@ -231,6 +231,9 @@ if __name__ == '__main__':
     NEED_BUILD_MODEL = True
 
     if NEED_BUILD_MODEL:
+        # Set model config
+        rknn.config(reorder_channel='0 1 2', mean_values=[[0, 0, 0]], std_values=[[255, 255, 255]])
+
         # Load darknet model
         print('--> Loading model')
         ret = rknn.load_darknet(model=MODEL_PATH, weight=WEIGHT_PATH)
@@ -238,8 +241,6 @@ if __name__ == '__main__':
             print('Load darknet model failed!')
             exit(ret)
         print('done')
-
-        rknn.config(reorder_channel='0 1 2', mean_values=[[0, 0, 0]], std_values=[[255, 255, 255]])
 
         # Build model
         print('--> Building model')

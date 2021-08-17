@@ -30,7 +30,7 @@ def export_keras_model():
 def show_outputs(outputs):
     output = outputs[0].reshape(-1)
     output_sorted = sorted(output, reverse=True)
-    top5_str = 'mobilenet_v2\n-----TOP 5-----\n'
+    top5_str = 'xception\n-----TOP 5-----\n'
     for i in range(5):
         value = output_sorted[i]
         index = np.where(output == value)
