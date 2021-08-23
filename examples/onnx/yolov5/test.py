@@ -9,9 +9,11 @@ from rknn.api import RKNN
 
 
 ONNX_MODEL = 'yolov5s.onnx'
-RKNN_MODEL = 'yolov5.rknn'
-IMG_PATH = './dog_bike_car_416x416.jpg'
+RKNN_MODEL = 'yolov5s.rknn'
+IMG_PATH = './bus.jpg'
 DATASET = './dataset.txt'
+
+QUANTIZE_ON = True
 
 OBJ_THRESH = 0.5
 NMS_THRESH = 0.6
@@ -126,38 +128,8 @@ def nms_boxes(boxes, scores):
     keep = np.array(keep)
     return keep
 
-def yolov5_post_process_simple(prediction):
-    nc = prediction.shape[2] - 5
-    xc = prediction[..., 4] > OBJ_THRESH
-    valid_object = prediction[xc]
-    valid_object[:,5:] *= valid_object[:,4:5]
 
-    boxes = xywh2xyxy(valid_object[:,:4])
-    best_score_class = np.max(valid_object[:,5:],axis=-1)
-    box_classes = np.argmax(valid_object[:,5:], axis=-1)
-    
-    nboxes, nclasses, nscores = [], [], []
-    for c in set(box_classes):
-        inds = np.where(box_classes == c)
-        b = boxes[inds]
-        c = box_classes[inds]
-        s = best_score_class[inds]
-
-        keep = nms_boxes(b, s)
-        nboxes.append(b[keep])
-        nclasses.append(c[keep])
-        nscores.append(s[keep])
-
-    if not nclasses and not nscores:
-        return None, None, None
-
-    boxes = np.concatenate(nboxes)
-    classes = np.concatenate(nclasses)
-    scores = np.concatenate(nscores)
-
-    return boxes, classes, scores
-
-def yolov5_post_process_full(input_data):
+def yolov5_post_process(input_data):
     masks = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
     anchors = [[10, 13], [16, 30], [33, 23], [30, 61], [62, 45],
               [59, 119], [116, 90], [156, 198], [373, 326]]
@@ -262,12 +234,14 @@ if __name__ == '__main__':
     rknn.config(reorder_channel='0 1 2',
                 mean_values=[[0, 0, 0]],
                 std_values=[[255, 255, 255]],
-                optimization_level=3)
+                optimization_level=3,
+                target_platform = 'rk1808',
+                output_optimize=1)
     print('done')
 
     # Load ONNX model
     print('--> Loading model')
-    ret = rknn.load_onnx(model=ONNX_MODEL)
+    ret = rknn.load_onnx(model=ONNX_MODEL,outputs=['396', '458', '520'])
     if ret != 0:
         print('Load yolov5 failed!')
         exit(ret)
@@ -275,7 +249,7 @@ if __name__ == '__main__':
 
     # Build model
     print('--> Building model')
-    ret = rknn.build(do_quantization=False, dataset=DATASET)
+    ret = rknn.build(do_quantization=QUANTIZE_ON, dataset=DATASET)
     if ret != 0:
         print('Build yolov5 failed!')
         exit(ret)
@@ -291,8 +265,8 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
-    # ret = rknn.init_runtime()
-    ret = rknn.init_runtime('rk1808')
+    ret = rknn.init_runtime()
+    # ret = rknn.init_runtime('rk1808', device_id='1808')
     if ret != 0:
         print('Init runtime environment failed')
         exit(ret)
@@ -306,19 +280,11 @@ if __name__ == '__main__':
     # Inference
     print('--> Running model')
     outputs = rknn.inference(inputs=[img])
-    
-    # simple post process
-    boxes, classes, scores = yolov5_post_process_simple(outputs[0])
 
-    img_0 = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    if boxes is not None:
-        draw(img_0, boxes, scores, classes)
-    cv2.imshow("direct result", img_0)    
-
-    # full post process 
-    input0_data = outputs[1].transpose(0,1,4,2,3)
-    input1_data = outputs[2].transpose(0,1,4,2,3)
-    input2_data = outputs[3].transpose(0,1,4,2,3)
+    # post process
+    input0_data = outputs[0]
+    input1_data = outputs[1]
+    input2_data = outputs[2]
 
     input0_data = input0_data.reshape(*input0_data.shape[1:])
     input1_data = input1_data.reshape(*input1_data.shape[1:])
@@ -329,12 +295,12 @@ if __name__ == '__main__':
     input_data.append(np.transpose(input1_data, (2, 3, 0, 1)))
     input_data.append(np.transpose(input2_data, (2, 3, 0, 1)))
 
-    boxes, classes, scores = yolov5_post_process_full(input_data)
+    boxes, classes, scores = yolov5_post_process(input_data)
 
     img_1 = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     if boxes is not None:
         draw(img_1, boxes, scores, classes)
-    cv2.imshow("full post process result", img_1)
+    cv2.imshow("post process result", img_1)
     cv2.waitKeyEx(0)
 
     rknn.release()
