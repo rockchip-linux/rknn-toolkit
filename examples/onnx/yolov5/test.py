@@ -291,9 +291,9 @@ if __name__ == '__main__':
     input2_data = input2_data.reshape(*input2_data.shape[1:])
 
     input_data = list()
-    input_data.append(np.transpose(input0_data, (2, 3, 0, 1)))
-    input_data.append(np.transpose(input1_data, (2, 3, 0, 1)))
-    input_data.append(np.transpose(input2_data, (2, 3, 0, 1)))
+    input_data.append(np.transpose(input0_data, (1, 2, 0, 3)))
+    input_data.append(np.transpose(input1_data, (1, 2, 0, 3)))
+    input_data.append(np.transpose(input2_data, (1, 2, 0, 3)))
 
     boxes, classes, scores = yolov5_post_process(input_data)
 
