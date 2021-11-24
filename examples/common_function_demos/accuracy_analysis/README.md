@@ -12,17 +12,17 @@
 
    `python normal_quantizition.py`
 
-   - 执行后在该工程目录下可得到 normal_quantization_analysis 的文件夹，各文件/目录的含义参考 《Rockchip_User_Guide_RKNN_Toolkit_CN.docx》的 3.5.3小节说明。
+   - 执行后在该工程目录下可得到 normal_quantization_analysis 的文件夹，各文件/目录的含义参考 《Rockchip_User_Guide_RKNN_Toolkit_CN.docx》的 4.3章节说明。
 
    - 这里我们生成文件夹中 individual_qnt_error_analysis.txt 文件，可以看到Conv_418_152、Conv_434_142、Conv_530_69 网络层的 cosine_norm 值分别为0.972651、0.989210、0.963591，我们就判断这几个网络层对量化不友好，需要我们使用混合量化去处理这些网络层。而其他网络层的 cosine_norm 值都在0.99以上，通常可以认为是量化友好的。我们先记录下这些网络层的名称，供后续步骤使用。
 
    
 
-2. 执行混合量化步骤一，生成配置文件，具体资料可参考《Rockchip_User_Guide_RKNN_Toolkit_CN.docx》的 3.3 节 和 3.7.11小节。
+2. 执行混合量化步骤一，生成配置文件，具体资料可参考《Rockchip_User_Guide_RKNN_Toolkit_CN.docx》的 4.5 章节 。
 
    `python hybrid_quantization_step1.py`
 
-   - 打开生成的 torchjitexport.quantization.cfg 配置文件，参考 《Rockchip_User_Guide_RKNN_Toolkit_CN.docx》3.3 节 的说明，我们就可以在 customized_quantize_layers 信息里面添加我们想要使用混合量化处理的网络层（从步骤1中得到）。
+   - 打开生成的 torchjitexport.quantization.cfg 配置文件，参考 《Rockchip_User_Guide_RKNN_Toolkit_CN.docx》4.5 节 的说明，我们就可以在 customized_quantize_layers 信息里面添加我们想要使用混合量化处理的网络层（从步骤1中得到）。
 
    - 配置文件中的 customized_quantize_layers 会给初始混合量化层的建议，这个建议的效果不一定是最优的，实际使用过程中请根据具体模型灵活设置。示例模型生成的 quantization.cfg 混合量化建议为：
 

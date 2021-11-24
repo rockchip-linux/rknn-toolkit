@@ -180,7 +180,7 @@ if __name__ == '__main__':
 
         # Build model
         print('--> Building model')
-        ret = rknn.build(do_quantization=True, dataset='./dataset.txt', pre_compile=True)
+        ret = rknn.build(do_quantization=True, dataset='./dataset.txt', pre_compile=False)
         if ret != 0:
             print('build rknn model failed')
             exit(ret)

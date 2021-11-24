@@ -1,0 +1,22 @@
+project-name: inception_v1_224_quant
+models:
+  inception_v1_224_quant:
+    platform: tflite
+    model_file_path: ./inception_v1_224_quant.tflite
+    subgraphs:
+        inputs:
+          - input
+        input_size_list:
+          - 224,224,3
+        outputs:
+          - InceptionV1/Logits/Predictions/Softmax
+    quantize: false
+    source: text
+    dataset: ./dataset.txt
+    configs:
+      quantized_dtype: asymmetric_quantized-u8
+      batch_size: 1
+      channel_mean_value: 128 128 128 128
+      reorder_channel: 0 1 2
+    dequant_mean: 0
+    dequant_scale: 0.00390625

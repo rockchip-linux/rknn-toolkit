@@ -15,7 +15,7 @@ DATASET = './dataset.txt'
 
 QUANTIZE_ON = True
 
-OBJ_THRESH = 0.5
+BOX_THRESH = 0.5
 NMS_THRESH = 0.6
 IMG_SIZE = 640
 
@@ -67,7 +67,7 @@ def process(input, mask, anchors):
     return box, box_confidence, box_class_probs
 
 def filter_boxes(boxes, box_confidences, box_class_probs):
-    """Filter boxes with object threshold.
+    """Filter boxes with box threshold. It's a bit different with origin yolov5 post process!
 
     # Arguments
         boxes: ndarray, boxes of objects.
@@ -79,10 +79,10 @@ def filter_boxes(boxes, box_confidences, box_class_probs):
         classes: ndarray, classes for boxes.
         scores: ndarray, scores for boxes.
     """
-    box_scores = box_confidences * box_class_probs
-    box_classes = np.argmax(box_scores, axis=-1)
-    box_class_scores = np.max(box_scores, axis=-1)
-    pos = np.where(box_class_scores >= OBJ_THRESH)
+    box_classes = np.argmax(box_class_probs, axis=-1)
+    box_class_scores = np.max(box_class_probs, axis=-1)
+    pos = np.where(box_confidences[...,0] >= BOX_THRESH)
+
 
     boxes = boxes[pos]
     classes = box_classes[pos]
@@ -236,12 +236,13 @@ if __name__ == '__main__':
                 std_values=[[255, 255, 255]],
                 optimization_level=3,
                 target_platform = 'rk1808',
-                output_optimize=1)
+                output_optimize=1,
+                quantize_input_node=QUANTIZE_ON)
     print('done')
 
     # Load ONNX model
     print('--> Loading model')
-    ret = rknn.load_onnx(model=ONNX_MODEL,outputs=['396', '458', '520'])
+    ret = rknn.load_onnx(model=ONNX_MODEL,outputs=['378', '439', '500'])
     if ret != 0:
         print('Load yolov5 failed!')
         exit(ret)
@@ -274,8 +275,9 @@ if __name__ == '__main__':
 
     # Set inputs
     img = cv2.imread(IMG_PATH)
-    img, ratio, (dw, dh) = letterbox(img, new_shape=(IMG_SIZE, IMG_SIZE))
+    # img, ratio, (dw, dh) = letterbox(img, new_shape=(IMG_SIZE, IMG_SIZE))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.resize(img,(IMG_SIZE, IMG_SIZE))
 
     # Inference
     print('--> Running model')
@@ -286,9 +288,9 @@ if __name__ == '__main__':
     input1_data = outputs[1]
     input2_data = outputs[2]
 
-    input0_data = input0_data.reshape(*input0_data.shape[1:])
-    input1_data = input1_data.reshape(*input1_data.shape[1:])
-    input2_data = input2_data.reshape(*input2_data.shape[1:])
+    input0_data = input0_data.reshape([3,-1]+list(input0_data.shape[-2:]))
+    input1_data = input1_data.reshape([3,-1]+list(input1_data.shape[-2:]))
+    input2_data = input2_data.reshape([3,-1]+list(input2_data.shape[-2:]))
 
     input_data = list()
     input_data.append(np.transpose(input0_data, (2, 3, 0, 1)))

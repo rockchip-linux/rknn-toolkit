@@ -1,28 +1,40 @@
+2021-11-20
+版本：v1.7.1
+1. 新功能：
+   支持PyTorch量化模型。
+2. 功能优化：
+   优化精度分析接口的性能。
+   优化日志功能。
+3. 各框架op完善：
+   Pytorch: 新增aten::embedding, aten::embedding_renorm_, aten::group_norm, aten::hardswish, aten::instance_norm, aten::Int, aten::linear, aten::pow, aten::reflection_pad2d, aten::silu算子的支持; 完善 aten::lstm, aten::layernorm, aten::instancenorm的支持。
+   ONNX: 完善 resize、slice算子支持。
+4. 增加ONNX/PyTorch/TFLite量化模型转换示例，新增yolov5 PyTorch模型转换示例。
+5. 修复已知bug。
+
+
 2021-08-09
 版本：v1.7.0
 1. 新功能：
-   1.1 支持 ONNX 量化模型（对应onnxruntime版本为1.5.2）;
-   1.2 RKNN_Toolkit Lite 支持 ARM 32bit 平台。
+   支持 ONNX 量化模型（对应onnxruntime版本为1.5.2）;
+   RKNN_Toolkit Lite 支持 ARM 32bit 平台。
 2. 功能优化：
-   2.1 优化量化接口的计算耗时；
-   2.2 完善混合量化接口；
-   2.3 完善MMSE量化参数优化算法；
-   2.4 完善精度分析接口；
-   2.5 完善可视化界面接口，支持显示网络层名称。
+   优化量化接口的计算耗时；
+   完善混合量化接口；
+   完善MMSE量化参数优化算法；
+   完善精度分析接口；
+   完善可视化界面接口，支持显示网络层名称。
 3. 完善各框架op的支持
-   3.1 Caffe：增加 DepthwiseConv op的支持。
-   3.2 ONNX：支持指定输入输出节点；完善 matmul, add, multiply, instance_normalization 等op的支持；增加对动态卷积的支持。
-   3.3 Pytorch：增加 aten::split, aten::split_with_sizes, aten::lstm, aten::argmin, aten::argmax 等op的支持；完善 aten::convolution(2D) 的支持，支持动态卷积。不再支持 pytorch 1.2.0版本。
-   3.4 TensorFlow：完善 tf.nn.conv2d 的支持，支持动态卷积。
-   3.5 RKNN：完善 reshape, broadcast, SiLU 等op的支持。
+   Caffe：增加 DepthwiseConv op的支持。
+   ONNX：支持指定输入输出节点；完善 matmul, add, multiply, instance_normalization 等op的支持；增加对动态卷积的支持。
+   Pytorch：增加 aten::split, aten::split_with_sizes, aten::lstm, aten::argmin, aten::argmax 等op的支持；完善 aten::convolution(2D) 的支持，支持动态卷积。不再支持 pytorch 1.2.0版本。
+   TensorFlow：完善 tf.nn.conv2d 的支持，支持动态卷积。
+   RKNN：完善 reshape, broadcast, SiLU 等op的支持。
 4. 增加推理接口pass_through参数的示例；增加精度分析接口使用示例；增加yolov5示例；优化 yolov3 示例。
 5. 修复已知bug。
 
 2021-05-17
 版本：v1.6.1
-1. 新功能：
-   1.1 增加量化参数优化方法MMSE；
-   1.2 支持导出每一层weight / bias和输出数据的分布直方图，用于分析精度问题。
+1. 新功能：增加量化参数优化方法MMSE；支持导出每一层weight / bias和输出数据的分布直方图，用于分析精度问题。
 2. 功能优化：完善mean_values / std_values设置不当时的提示信息。
 3. 完善对各框架OP的支持
    Caffe: 完善对Crop, Eltwise, Roipooling等op的支持；
@@ -36,54 +48,34 @@
 
 2020-12-31
 版本：v1.6.0
-1. 新功能：
-   1.1 支持Keras框架，并且支持TF 2.0导出的h5模型；
-   1.2 支持Pytorch 1.6.0；
-   1.3 支持ONNX 1.6.0；
-   1.4 增加模型加密功能；
-   1.5 支持通过命令行输出已连接设备；
-   1.6 离线预编译支持多输入模型。
-2. 功能优化：
-   2.1 优化精度分析功能，完整模型比对时，遇到Conv+Relu等情况时，不再需要跳层比较；
-   2.2 优化RKNN模型预处理，提高模型推理性能；
-   2.3 优化性能分析功能，打印详情时，精简每层OP；
-   2.4 模型分段功能限制在RK1806/RK1808/RV1109/RV1126芯片范围；
-   2.5 docker镜像系统升级为Ubuntu 18.04，Python升级到3.6。
+1. 新功能：支持Keras框架，并且支持TF 2.0导出的h5模型；支持Pytorch 1.6.0；支持ONNX 1.6.0；增加模型加密功能；支持通过命令行输出已连接设备；离线预编译支持多输入模型。
+2. 功能优化：优化精度分析功能，完整模型比对时，遇到Conv+Relu等情况时，不再需要跳层比较；优化RKNN模型预处理，提高模型推理性能；优化性能分析功能，打印详情时，精简每层OP；模型分段功能限制在RK1806/RK1808/RV1109/RV1126芯片范围；docker镜像系统升级为Ubuntu 18.04，Python升级到3.6。
 3. 完善对各框架OP的支持。
 4. 修复已知问题。
 
 2020-08-14
 版本：v1.4.0
-1. 新功能：
-   1.1 增加逐层量化分析子功能；
-   1.2 输入预处理支持多个std_value；
-   1.3 支持从开发板导出预编译模型。
-2. 功能优化：
-   2.1 优化channel_mean_value参数，改成mean_values/std_values；
-   2.2 移除load_tensorflow接口中的mean_values和std_values；
-   2.3 可视化完善对多输入的支持，增加对RK1806/RV1109/RV1126的支持；
-   2.4 精度分析功能增加非归一化的余弦距离和欧式距离。
-3. 完善对各框架OP的支持:
-   TensorFlow：增加对dense子图的支持。
-   TFLite：增加对split_v的支持；完善对pad的支持。
-   ONNX：完善对prelu / deconvolution / avg_pool / clip的支持。
-   Pytorch：增加对pixel_shuffle, unsqueeze, sum,select, hardtanh, elu, slice, squeeze, exp,relu6, threshold_, matmul, exp, pad的支持；完善对adaptive_avg_pool2d,  upsample_bilinear, relu6的支持。
-   MXNet：完善对fc的支持。
-   Darknet: 增加对mish的支持；完善对route的支持。
+1. 新功能：增加逐层量化分析子功能；输入预处理支持多个std_value；支持从开发板导出预编译模型。
+2. 功能优化：优化channel_mean_value参数，改成mean_values/std_values；移除load_tensorflow接口中的mean_values和std_values；可视化完善对多输入的支持，增加对RK1806/RV1109/RV1126的支持；精度分析功能增加非归一化的余弦距离和欧式距离。
+3. TensorFlow：增加对dense子图的支持。
+    TFLite：增加对split_v的支持；完善对pad的支持。
+    ONNX：完善对prelu / deconvolution / avg_pool / clip的支持。
+    Pytorch：增加对pixel_shuffle, unsqueeze, sum,select, hardtanh, elu, slice, squeeze, exp,relu6, threshold_, matmul, exp, pad的支持；完善对adaptive_avg_pool2d,  upsample_bilinear, relu6的支持。
+    MXNet：完善对fc的支持。
+    Darknet: 增加对mish的支持；完善对route的支持。
 4. 修复已知bug。
 
 2020-04-02
 版本：v1.3.2
 1. 增加对RV1109、RV1126的支持。
 2. 完善eval_perf功能，不再需要填输入参数。
-3. 完善对各框架OP支持:
-   TensorFlow增加对reducemax的支持；完善对dilated convolution的支持。
-   TFLite增加对dilated convolution的支持。
-   Caffe增加对CRNN的支持。
-   ONNX增加对Gather和Cast的支持；完善对avg_pool的支持。
-   Pytorch增加对upsample_nearest2d, contiguous, softmax, permute, leaky_relu, prelue, log, deconv和sub的支持；完善对Reshape, Constant的支持。
-   MXNet增加对Crop, UpSampling, SoftmaxActivation, _minus_scalar, log的支持。
-   RKNN完善对reshape, concat, split的支持。
+3. TensorFlow增加对reducemax的支持；完善对dilated convolution的支持。
+    TFLite增加对dilated convolution的支持。
+    Caffe增加对CRNN的支持。
+    ONNX增加对Gather和Cast的支持；完善对avg_pool的支持。
+    Pytorch增加对upsample_nearest2d, contiguous, softmax, permute, leaky_relu, prelue, log, deconv和sub的支持；完善对Reshape, Constant的支持。
+    MXNet增加对Crop, UpSampling, SoftmaxActivation, _minus_scalar, log的支持。
+    RKNN完善对reshape, concat, split的支持。
 4. 修复已知bug。
 
 2019-12-25

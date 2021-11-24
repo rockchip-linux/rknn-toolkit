@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     # rknn.load_rknn('./resize_area.rknn')
 
-    rknn.init_runtime()
+    rknn.init_runtime('rk1808')
 
     img = cv2.imread('./dog_32x32.jpg')
 

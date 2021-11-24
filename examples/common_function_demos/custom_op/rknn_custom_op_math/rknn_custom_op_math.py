@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     # rknn.load_rknn('./rknn_test.rknn')
 
-    rknn.init_runtime()
+    rknn.init_runtime('rk1808')
 
     print("init runtime done")
 

@@ -1,9 +1,8 @@
-4e7e691d5f7de5f73a35522e376b8f27  rknn_toolkit_lite-1.7.0-cp35-cp35m-linux_aarch64.whl
-843c28de3f34c3b33f1204b8c2342448  rknn_toolkit_lite-1.7.0-cp35-cp35m-linux_x86_64.whl
-91ec0c1910b125225565a431cf86657b  rknn_toolkit_lite-1.7.0-cp36-cp36m-linux_armv7l.whl
-1d177d17275221dfe3e4922d83d24d73  rknn_toolkit_lite-1.7.0-cp36-cp36m-linux_x86_64.whl
-1079e834e6c9722075972f1e75d3c4d3  rknn_toolkit_lite-1.7.0-cp36-cp36m-macosx_10_15_x86_64.whl
-5d760a24089487b046c1a0b1fa43ce3c  rknn_toolkit_lite-1.7.0-cp36-cp36m-win_amd64.whl
-6aa35196d90c134a1918846e54ec0f48  rknn_toolkit_lite-1.7.0-cp37-cp37m-linux_aarch64.whl
-e4386a4663165abffba5fa410857a0fc  rknn_toolkit_lite-1.7.0-cp37-cp37m-linux_armv7l.whl
-e75fefb8be1b47347dd4c3fbb8e865d8  rknn_toolkit_lite-1.7.0-cp37-cp37m-macosx_10_15_x86_64.whl
+d36e0fefd4355b3f683cee74bce2f285  rknn_toolkit_lite-1.7.1-cp35-cp35m-linux_aarch64.whl
+156f881082a425ede0317e74fb61c970  rknn_toolkit_lite-1.7.1-cp35-cp35m-linux_x86_64.whl
+476df74962987cb189683f488b30da48  rknn_toolkit_lite-1.7.1-cp36-cp36m-linux_x86_64.whl
+8f8d1a683b54391452f2ec761c7aeb95  rknn_toolkit_lite-1.7.1-cp36-cp36m-macosx_10_15_x86_64.whl
+54110c4324e4d6d5e2368398ed1e32b0  rknn_toolkit_lite-1.7.1-cp36-cp36m-win_amd64.whl
+de01409e4380ec49ee1301fd4ea2e4b5  rknn_toolkit_lite-1.7.1-cp37-cp37m-linux_aarch64.whl
+a744de2a4bf2abaede95dc57dda0e6de  rknn_toolkit_lite-1.7.1-cp37-cp37m-linux_armv7l.whl
+b6118536dd975ecdedcb7716af3c1a42  rknn_toolkit_lite-1.7.1-cp37-cp37m-macosx_10_15_x86_64.whl
