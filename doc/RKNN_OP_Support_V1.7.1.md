@@ -1,5 +1,5 @@
 # RKNN OP Support
-Base on RKNN Toolkit Version 1.7.0
+Base on RKNN Toolkit Version 1.7.1
 
 ## Caffe OPs supported by RKNN
 There are two caffe protocols RKNN Toolkit uses, one based on the officially modified protocol of berkeley, and one based on the protocol containing the LSTM layer.  
