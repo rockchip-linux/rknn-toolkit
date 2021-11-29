@@ -229,7 +229,7 @@ if __name__ == '__main__':
     # pre-process config
     print('--> Config model')
     rknn.config(
-                reorder_channel='2 1 0',
+                reorder_channel='0 1 2',
                 mean_values=[[0, 0, 0]],
                 std_values=[[255, 255, 255]],
                 optimization_level=3,
