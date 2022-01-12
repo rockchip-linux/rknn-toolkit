@@ -11,9 +11,9 @@ DATASET = './dataset.txt'
 
 QUANTIZE_ON = False
 
-BOX_THRESH = 0.5
+BOX_THRESH = 0.3
 NMS_THRESH = 0.6
-IMG_SIZE = 640
+IMG_SIZE = (640, 640) # (width, height), such as (1280, 736)
 
 CLASSES = ("person", "bicycle", "car","motorbike ","aeroplane ","bus ","train","truck ","boat","traffic light",
            "fire hydrant","stop sign ","parking meter","bench","bird","cat","dog ","horse ","sheep","cow","elephant",
@@ -47,13 +47,13 @@ def process(input, mask, anchors):
 
     box_xy = sigmoid(input[..., :2])*2 - 0.5
 
-    col = np.tile(np.arange(0, grid_w), grid_w).reshape(-1, grid_w)
-    row = np.tile(np.arange(0, grid_h).reshape(-1, 1), grid_h)
+    col = np.tile(np.arange(0, grid_w), grid_h).reshape(-1, grid_w)
+    row = np.tile(np.arange(0, grid_h).reshape(-1, 1), grid_w)
     col = col.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=-2)
     row = row.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=-2)
     grid = np.concatenate((col, row), axis=-1)
     box_xy += grid
-    box_xy *= int(IMG_SIZE/grid_h)
+    box_xy *= (int(IMG_SIZE[1]/grid_h), int(IMG_SIZE[0]/grid_w))
 
     box_wh = pow(sigmoid(input[..., 2:4])*2, 2)
     box_wh = box_wh * anchors
@@ -242,7 +242,7 @@ if __name__ == '__main__':
 
     # Load ONNX model
     print('--> Loading model')
-    ret = rknn.load_pytorch(model=PT_MODEL, input_size_list=[[3,640, 640]])
+    ret = rknn.load_pytorch(model=PT_MODEL, input_size_list=[[3,IMG_SIZE[1], IMG_SIZE[0]]])
     if ret != 0:
         print('Load yolov5 failed!')
         exit(ret)
@@ -277,7 +277,7 @@ if __name__ == '__main__':
 
     # Set inputs
     img = cv2.imread(IMG_PATH)
-    img, ratio, (dw, dh) = letterbox(img, new_shape=(IMG_SIZE, IMG_SIZE))
+    img, ratio, (dw, dh) = letterbox(img, new_shape=(IMG_SIZE[1], IMG_SIZE[0]))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # Inference
