@@ -6,8 +6,8 @@ models:
     subgraphs:
         inputs:
           - FeatureExtractor/MobilenetV1/MobilenetV1/Conv2d_0/BatchNorm/batchnorm/mul_1
-        input-size-list:
-          - 300,300,3
+        input_tensor_shapes:
+          - [300, 300, 3]
         outputs:
           - concat
           - concat_1
