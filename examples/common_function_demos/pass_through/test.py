@@ -116,31 +116,19 @@ def deeplabv3_post_process(img, inference_result):
 
     vis_segmentation(resized_im, seg_map)
 
-def prepare_dataset(pass_through):
-    if pass_through == True:
-        # if using pass_through, dataset should be preprocess first
-        img = cv2.imread('bike_boy.jpg')
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype(np.float32)
-        img = (img-127.5)/127.5
-        np.save('bike_boy.npy',img)
-        with open('dataset.txt','w') as F:
-            F.write('bike_boy.npy\n')
-    else:
-        with open('dataset.txt','w') as F:
-            F.write('bike_boy.jpg\n')
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--pass_through',
-                        type=bool,
-                        default=True)
-    parser.add_argument('--load_rknn',
-                        type=bool,
-                        default=False)                    
+    parser.add_argument("--pass-through",
+                        dest='pass_through',
+                        action='store_true',
+                        help='Whether pass through input data to RKNN model.')
+    parser.add_argument('--load-rknn',
+                        dest='load_rknn',
+                        action='store_true',
+                        help='Whether load RKNN model directly.')
     args = parser.parse_args()
 
     pass_through = args.pass_through
-    prepare_dataset(pass_through)
 
     LOAD_RKNN = args.load_rknn
     PB_MODEL = './deeplab-v3-plus-mobilenet-v2.pb'
@@ -173,10 +161,7 @@ if __name__ == '__main__':
         print('done')
 
         # set config refer to pass_througn value.
-        if pass_through == True:
-            rknn.config()
-        else:
-            rknn.config(channel_mean_value='127.5 127.5 127.5 127.5', reorder_channel='0 1 2')
+        rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]], reorder_channel='0 1 2')
 
         # Build model
         print('--> Building model')
@@ -201,7 +186,7 @@ if __name__ == '__main__':
 
     # init runtime 
     print('--> init runtime')
-    ret = rknn.init_runtime(target='rk1808')
+    ret = rknn.init_runtime(target='rk1808', device_id='1808')
     if ret < 0:
         print('init runtime failed')
         exit(ret)
@@ -211,12 +196,29 @@ if __name__ == '__main__':
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # preprocess if pass_through is True
     if pass_through == True:
+        print('Pass through input data to model directly.')
         img = (img.astype(np.float32)-127.5)/127.5
+        # quantize input
+        scale = 0.007843137718737125
+        zp = 127
+        img = ((img / scale) + zp).astype(np.uint8)
+        inputs_pass_through=[1]
+    else:
+        print('Pass normal data to runtime, runtime will do preprocess and quantize.')
+        inputs_pass_through=[0]
 
     # inference
     print('--> inference')
-    outputs = rknn.inference(inputs=[img])
+    outputs = rknn.inference(inputs=[img], inputs_pass_through=inputs_pass_through)
+    for idx, out in enumerate(outputs):
+        if pass_through:
+            np.save('out{}_pass.npy'.format(idx), out)
+        else:
+            np.save('out{}_norm.npy'.format(idx), out)
     print('done')
+
+    rknn.release()
+
     deeplabv3_post_process(img=TEST_IMAGE, inference_result=outputs[0])
 
     exit(0)

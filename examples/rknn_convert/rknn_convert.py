@@ -78,6 +78,8 @@ def convert_model(model_path, out_path, pre_compile):
         exported_rknn_model_path_list.append(export_rknn_model_path)
         print('done')
 
+        rknn.release()
+
     return exported_rknn_model_path_list
 
 

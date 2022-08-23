@@ -242,7 +242,7 @@ if __name__ == '__main__':
 
     # Load ONNX model
     print('--> Loading model')
-    ret = rknn.load_onnx(model=ONNX_MODEL,outputs=['378', '439', '500'])
+    ret = rknn.load_onnx(model=ONNX_MODEL)
     if ret != 0:
         print('Load yolov5 failed!')
         exit(ret)
