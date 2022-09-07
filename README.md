@@ -1,6 +1,13 @@
 # Introduction
-RKNN-Toolkit is a software development kit that provides users with model conversion, inference and performance evaluation on PC and Rockchip NPU platforms.
+RKNN-Toolkit is a software development kit that provides users with model conversion, inference and performance evaluation on PC and Rockchip NPU platforms(RK1808/RK1806/RK3399Pro/RV1109/RV1126).  
 RKNN-Toolkit-Lite provides Python programming interfaces for Rockchip NPU platform to help users deploy RKNN models and accelerate the implementation of AI applications.
+Note:
+- For the deployment of the RKNN model, please refer to:
+  - RK1808/RK1806/RV1109/RV1126: https://github.com/rockchip-linux/rknpu
+  - RK3399Pro: https://github.com/airockchip/RK3399Pro_npu
+- For RK3566/RK3568/RK3588/RK3588S/RV1103/RV1106, please refer to:
+  - https://github.com/rockchip-linux/rknn-toolkit2
+  - https://github.com/rockchip-linux/rknpu2
 # Download
 From version 1.3.0, some wheel packages are larger than 100MB, can not be uploaded directly. So, you need to go to the releases page to download.
 You can download from releases page: https://github.com/rockchip-linux/rknn-toolkit/releases
