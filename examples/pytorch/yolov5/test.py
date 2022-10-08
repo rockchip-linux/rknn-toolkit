@@ -43,7 +43,7 @@ def process(input, mask, anchors):
     box_confidence = sigmoid(input[..., 4])
     box_confidence = np.expand_dims(box_confidence, axis=-1)
 
-    box_class_probs = sigmoid(input[..., 5:])
+    box_class_probs = sigmoid(input[..., 5:]) * box_confidence
 
     box_xy = sigmoid(input[..., :2])*2 - 0.5
 
