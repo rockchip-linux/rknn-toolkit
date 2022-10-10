@@ -1,8 +1,4 @@
 import os
-import urllib
-import traceback
-import time
-import sys
 import numpy as np
 import cv2
 from rknn.api import RKNN
@@ -17,7 +13,7 @@ QUANTIZE_ON = True
 
 BOX_THRESH = 0.5
 NMS_THRESH = 0.6
-IMG_SIZE = 640
+IMG_SIZE = (640, 640) # (width, height), such as (1280, 736)
 
 CLASSES = ("person", "bicycle", "car","motorbike ","aeroplane ","bus ","train","truck ","boat","traffic light",
            "fire hydrant","stop sign ","parking meter","bench","bird","cat","dog ","horse ","sheep","cow","elephant",
@@ -51,13 +47,13 @@ def process(input, mask, anchors):
 
     box_xy = sigmoid(input[..., :2])*2 - 0.5
 
-    col = np.tile(np.arange(0, grid_w), grid_w).reshape(-1, grid_w)
-    row = np.tile(np.arange(0, grid_h).reshape(-1, 1), grid_h)
+    col = np.tile(np.arange(0, grid_w), grid_h).reshape(-1, grid_w)
+    row = np.tile(np.arange(0, grid_h).reshape(-1, 1), grid_w)
     col = col.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=-2)
     row = row.reshape(grid_h, grid_w, 1, 1).repeat(3, axis=-2)
     grid = np.concatenate((col, row), axis=-1)
     box_xy += grid
-    box_xy *= int(IMG_SIZE/grid_h)
+    box_xy *= (int(IMG_SIZE[1]/grid_h), int(IMG_SIZE[0]/grid_w))
 
     box_wh = pow(sigmoid(input[..., 2:4])*2, 2)
     box_wh = box_wh * anchors
@@ -79,14 +75,22 @@ def filter_boxes(boxes, box_confidences, box_class_probs):
         classes: ndarray, classes for boxes.
         scores: ndarray, scores for boxes.
     """
-    box_classes = np.argmax(box_class_probs, axis=-1)
-    box_class_scores = np.max(box_class_probs, axis=-1)
-    pos = np.where(box_confidences[...,0] >= BOX_THRESH)
+    boxes = boxes.reshape(-1, 4)
+    box_confidences = box_confidences.reshape(-1)
+    box_class_probs = box_class_probs.reshape(-1, box_class_probs.shape[-1])
 
+    _box_pos = np.where(box_confidences >= BOX_THRESH)
+    boxes = boxes[_box_pos]
+    box_confidences = box_confidences[_box_pos]
+    box_class_probs = box_class_probs[_box_pos]
 
-    boxes = boxes[pos]
-    classes = box_classes[pos]
-    scores = box_class_scores[pos]
+    class_max_score = np.max(box_class_probs, axis=-1)
+    classes = np.argmax(box_class_probs, axis=-1)
+    _class_pos = np.where(class_max_score* box_confidences >= BOX_THRESH)
+
+    boxes = boxes[_class_pos]
+    classes = classes[_class_pos]
+    scores = (class_max_score* box_confidences)[_class_pos]
 
     return boxes, classes, scores
 
@@ -275,9 +279,8 @@ if __name__ == '__main__':
 
     # Set inputs
     img = cv2.imread(IMG_PATH)
-    # img, ratio, (dw, dh) = letterbox(img, new_shape=(IMG_SIZE, IMG_SIZE))
+    img, ratio, (dw, dh) = letterbox(img, new_shape=(IMG_SIZE[1], IMG_SIZE[0]))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.resize(img,(IMG_SIZE, IMG_SIZE))
 
     # Inference
     print('--> Running model')
