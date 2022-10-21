@@ -39,6 +39,9 @@ cd490d13dc1e40e24ab76100a9b82ced  rknn_toolkit_lite-1.7.3-cp36-cp36m-win_amd64.w
 b1b32a4e8803dd9303ab1a72ae8deccf  rknn_toolkit_lite-1.7.3-cp38-cp38-linux_x86_64.whl
 ```
 # Feedback and Community Suport
-- QQ Group Chat: 1025468710
-<p align="center"><img width="200" height="200"  src="https://github.com/rockchip-linux/rknn-toolkit/blob/master/QQGroupQRCode.png"/></p>
-<p align="center">QQ Group Chat</p>
+- QQ Group Chat: 1025468710 (full, please join group 2)
+- QQ Group Chat2: 547021958 
+<center class="half">
+  <img width="200" height="200"  src="https://github.com/rockchip-linux/rknn-toolkit/blob/master/QQGroupQRCode.png" title="QQ Group Chat"/>
+  <img width="200" height="200"  src="https://github.com/rockchip-linux/rknn-toolkit/blob/master/QQGroup2QRCode.png" title="QQ Group Chat2"/>
+</center>
