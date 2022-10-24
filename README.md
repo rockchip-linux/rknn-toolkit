@@ -38,7 +38,7 @@ cd490d13dc1e40e24ab76100a9b82ced  rknn_toolkit_lite-1.7.3-cp36-cp36m-win_amd64.w
 079aaf9c2c39b2c2a6858688ed733973  rknn_toolkit_lite-1.7.3-cp37-cp37m-macosx_10_15_x86_64.whl
 b1b32a4e8803dd9303ab1a72ae8deccf  rknn_toolkit_lite-1.7.3-cp38-cp38-linux_x86_64.whl
 ```
-# Feedback and Community Suport
+# Feedback and Community Support
 - QQ Group Chat: 1025468710 (full, please join group 2)
 - QQ Group Chat2: 547021958 
 <center class="half">
