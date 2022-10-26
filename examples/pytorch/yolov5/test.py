@@ -14,7 +14,8 @@ QUANTIZE_ON = False
 BOX_THRESH = 0.5
 NMS_THRESH = 0.6
 IMG_SIZE = (640, 640) # (width, height), such as (1280, 736)
-
+SHAPES =((0.0, 0.0), (0.0, 0.0)) # scale_coords: such as  ((0.33, 0.33), (0.0, 140.0))
+SHAPE =(0,0)# scale_coords: such as (1080, 1920)
 CLASSES = ("person", "bicycle", "car","motorbike ","aeroplane ","bus ","train","truck ","boat","traffic light",
            "fire hydrant","stop sign ","parking meter","bench","bird","cat","dog ","horse ","sheep","cow","elephant",
            "bear","zebra ","giraffe","backpack","umbrella","handbag","tie","suitcase","frisbee","skis","snowboard","sports ball","kite",
@@ -168,6 +169,7 @@ def yolov5_post_process(input_data):
         return None, None, None
 
     boxes = np.concatenate(nboxes)
+    scale_coords(IMG_SIZE, boxes, SHAPE, SHAPES)
     classes = np.concatenate(nclasses)
     scores = np.concatenate(nscores)
 
@@ -222,6 +224,25 @@ def letterbox(im, new_shape=(640, 640), color=(0, 0, 0)):
     im = cv2.copyMakeBorder(im, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
     return im, ratio, (dw, dh)
 
+def scale_coords(img1_shape, coords, img0_shape, ratio_pad=None):
+    # Rescale coords (xyxy) from img1_shape to img0_shape
+    if ratio_pad is None:  # calculate from img0_shape
+        gain = min(img1_shape[0] / img0_shape[0], img1_shape[1] / img0_shape[1])  # gain  = old / new
+        pad = (img1_shape[1] - img0_shape[1] * gain) / 2, (img1_shape[0] - img0_shape[0] * gain) / 2  # wh padding
+    else:
+        gain = ratio_pad[0][0]
+        pad = ratio_pad[1]
+
+    coords[:, [0, 2]] -= pad[0]  # x padding
+    coords[:, [1, 3]] -= pad[1]  # y padding
+    coords[:, :4] /= gain
+    clip_coords(coords, img0_shape)
+    return coords
+
+def clip_coords(boxes, shape):
+    # Clip bounding xyxy bounding boxes to image shape (height, width)
+    boxes[:, [0, 2]] = boxes[:, [0, 2]].clip(0, shape[1])  # x1, x2
+    boxes[:, [1, 3]] = boxes[:, [1, 3]].clip(0, shape[0])  # y1, y2
 
 if __name__ == '__main__':
 
@@ -282,8 +303,10 @@ if __name__ == '__main__':
     print('done')
 
     # Set inputs
-    img = cv2.imread(IMG_PATH)
-    img, ratio, (dw, dh) = letterbox(img, new_shape=(IMG_SIZE[1], IMG_SIZE[0]))
+    original_img = cv2.imread(IMG_PATH)
+    img, ratio, pad = letterbox(original_img, new_shape=(IMG_SIZE[1], IMG_SIZE[0]))
+    SHAPES=(ratio,pad)
+    SHAPE=(original_img.shape[0],original_img.shape[1])
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # Inference
@@ -306,10 +329,9 @@ if __name__ == '__main__':
 
     boxes, classes, scores = yolov5_post_process(input_data)
 
-    img_1 = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     if boxes is not None:
-        draw(img_1, boxes, scores, classes)
-    cv2.imshow("post process result", img_1)
+        draw(original_img, boxes, scores, classes)
+    cv2.imshow("post process result", original_img)
     cv2.waitKeyEx(0)
 
     rknn.release()
