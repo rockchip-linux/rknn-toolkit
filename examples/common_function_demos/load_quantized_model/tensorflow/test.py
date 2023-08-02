@@ -1,3 +1,4 @@
+import platform
 import numpy as np
 import cv2
 import os
@@ -7,7 +8,6 @@ import shutil
 import traceback
 import time
 import sys
-import argparse
 from rknn.api import RKNN
 
 PB_FILE = './inception_v3_quant_frozen.pb'
@@ -64,23 +64,26 @@ def show_progress(blocknum, blocksize, totalsize):
     f.write('\r\n')
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--target",
-                        type=str,
-                        default='rk1808',
-                        help="Hardware platform, current we support: rk1808, rk3399pro, rk1109, default is None")
-    parser.add_argument("--device-id",
-                        type=str,
-                        default=None,
-                        help="Device id, when we have multi devices connected, id need be pointed.")
-    args = parser.parse_args()
-    target = args.target
-    device_id = args.device_id
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
 
-    if target is None:
-        target_platform = 'rk1808'
-    else:
-        target_platform = target
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
 
     # Create RKNN object
     rknn = RKNN(verbose=False)
@@ -120,7 +123,7 @@ if __name__ == '__main__':
     # pre-process config
     print('--> Config model')
     rknn.config(reorder_channel='0 1 2', 
-                target_platform=target_platform,
+                target_platform=[target],
                 mean_values=[[127.5, 127.5, 127.5]],
                 std_values=[[128, 128, 128]])
     print('done')
@@ -131,10 +134,10 @@ if __name__ == '__main__':
                                inputs=INPUTS,
                                outputs=OUTPUTS,
                                input_size_list=[[INPUT_SIZE, INPUT_SIZE, 3]],
-                               predef_file=None,
-                                )
+                               predef_file=None)
     if ret != 0:
         print('Load inception_v3_quant_frozen failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -143,6 +146,7 @@ if __name__ == '__main__':
     ret = rknn.build(do_quantization=False)
     if ret != 0:
         print('Build inception_v3_quant_frozen.rknn failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -151,6 +155,7 @@ if __name__ == '__main__':
     ret = rknn.export_rknn(RKNN_MODEL_PATH)
     if ret != 0:
         print('Export inception_v3_quant_frozen.rknn failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -160,10 +165,14 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
     ret = rknn.init_runtime(target=target, device_id=device_id)
-    # ret = rknn.init_runtime()
     if ret != 0:
         print('Init runtime environment failed')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -174,11 +183,6 @@ if __name__ == '__main__':
     output = np.exp(x)/np.sum(np.exp(x))
     outputs = [output]
     show_outputs(outputs)
-    print('done')
-
-    # perf
-    print('--> Begin evaluate model performance')
-    perf_results = rknn.eval_perf(inputs=[img])
     print('done')
 
     rknn.release()

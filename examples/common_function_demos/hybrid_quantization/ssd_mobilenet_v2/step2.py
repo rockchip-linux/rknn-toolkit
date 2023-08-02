@@ -1,14 +1,33 @@
+import sys
 from rknn.api import RKNN
 
 if __name__ == '__main__':
+    # Default target platform
+    target = 'rv1126'
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) > 2:
+        print('Too much arguments')
+        print('Usage: python {} [target]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126'.format(
+            sys.argv[0]))
+        exit(-1)
 
     # Create RKNN object
     rknn = RKNN()
     
     # Set model config
     print('--> Config model')
-    rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]],
-                reorder_channel='0 1 2', batch_size=16)
+    rknn.config(mean_values=[[127.5, 127.5, 127.5]],
+                std_values=[[127.5, 127.5, 127.5]],
+                reorder_channel='0 1 2',
+                batch_size=16,
+                target_platform=[target])
     print('done')
 
     # Hybrid quantization step2
@@ -19,6 +38,7 @@ if __name__ == '__main__':
                                          dataset='./dataset.txt')
     if ret != 0:
         print('hybrid_quantization_step2 failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -27,6 +47,7 @@ if __name__ == '__main__':
     ret = rknn.export_rknn('./ssd_mobilenet_v2.rknn')
     if ret != 0:
         print('Export RKNN model failed!')
+        rknn.release()
         exit(ret)
     print('done')
 

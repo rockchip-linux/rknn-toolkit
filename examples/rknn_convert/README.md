@@ -1,31 +1,5 @@
-## 环境准备
+# Example change description
 
-安装rknn-toolkit
+1. For the normal model conversion using the **Python API**, you can refer to the conversion process of other sample codes.
+2. In addition, RKNN-Toolkit also supports model conversion with **less coding** and **more convenient verification functions** by writing yaml configuration files. For more details, please refer to the [rknn_model_zoo](https://github.com/airockchip/rknn_model_zoo "rknn model zoo") project to learn how to write your own model configuration file, using a unified model conversion script to complete the RKNN model **conversion and evaluation** task.
 
-## 模型转换
-
-```
-python rknn_convert models/face_detection out_rknn False
-```
-
-第1个参数是要转换的原始模型的路径（可以直接填目录，但该目录需要包含`model_config.yml`文件）
-
-第2个参数是转换后模型输出目录
-
-第3个参数是是否开启预编译（加速模型加载时间）
-
-
-## 添加模型
-
-参考models下的目录，其中
-
-- tensorflow可以参考tensorflow/mobilenet-ssd
-- caffe模型可以参考caffe/mobilenet_v2
-- onnx模型可以参考onnx/mobilenet_v2
-- tflite模型可以参考tflite/mobilenet_v1
-
-需要包括以下文件
-
-- 模型原始文件
-- model_config.yml模型的配置文件
-- 量化的dataset.txt和量化图片

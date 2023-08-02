@@ -1,11 +1,9 @@
+import platform
+import sys
 import numpy as np
 import cv2
 import os
 import urllib.request
-from matplotlib import gridspec
-from matplotlib import pyplot as plt
-from PIL import Image
-from tensorflow.python.platform import gfile
 from rknn.api import RKNN
 
 
@@ -225,6 +223,27 @@ if __name__ == '__main__':
     # Download yolov3.weight
     download_yolov3_weight(WEIGHT_PATH)
 
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
+
     # Create RKNN object
     rknn = RKNN()
 
@@ -232,13 +251,17 @@ if __name__ == '__main__':
 
     if NEED_BUILD_MODEL:
         # Set model config
-        rknn.config(reorder_channel='0 1 2', mean_values=[[0, 0, 0]], std_values=[[255, 255, 255]])
+        rknn.config(reorder_channel='0 1 2',
+                    mean_values=[[0, 0, 0]],
+                    std_values=[[255, 255, 255]],
+                    target_platform=[target])
 
         # Load darknet model
         print('--> Loading model')
         ret = rknn.load_darknet(model=MODEL_PATH, weight=WEIGHT_PATH)
         if ret != 0:
             print('Load darknet model failed!')
+            rknn.release()
             exit(ret)
         print('done')
 
@@ -247,6 +270,7 @@ if __name__ == '__main__':
         ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
         if ret != 0:
             print('Build model failed.')
+            rknn.release()
             exit(ret)
         print('done')
 
@@ -255,6 +279,7 @@ if __name__ == '__main__':
         ret = rknn.export_rknn(RKNN_MODEL_PATH)
         if ret != 0:
             print('Export RKNN model failed.')
+            rknn.release()
             exit(ret)
         print('done')
     else:
@@ -268,7 +293,11 @@ if __name__ == '__main__':
 
     # Init runtime environment
     print('--> Init runtime environment')
-    ret = rknn.init_runtime()
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret != 0:
         print('Init runtime environment failed.')
         exit(ret)
@@ -282,6 +311,7 @@ if __name__ == '__main__':
     outputs = rknn.inference(inputs=[img])
     print('done')
 
+    # Post process: get detected objects, corresponding scores and coordinates
     input0_data = outputs[0]
     input1_data = outputs[1]
     input2_data = outputs[2]
@@ -297,12 +327,13 @@ if __name__ == '__main__':
 
     boxes, classes, scores = yolov3_post_process(input_data)
 
+    # Draw and save detected results
     image = cv2.imread(im_file)
     if boxes is not None:
         draw(image, boxes, scores, classes)
 
-    cv2.imshow("results", image)
-    cv2.waitKeyEx(0)
+    cv2.imwrite("results.jpg", image)
+    print("The detection results have been drawn into results.jpg")
 
     rknn.release()
 

@@ -1,3 +1,5 @@
+import platform
+import sys
 import numpy as np
 import cv2
 from rknn.api import RKNN
@@ -166,13 +168,32 @@ def ssd_post_process(conf_data, loc_data, imgpath, output_dir='.'):
         draw.rectangle([(x1, text_bottom - text_height - 2 * margin), (x1 + text_width, text_bottom)], fill=color)
         draw.text((x1 + margin, text_bottom - text_height - margin), display_str, fill='black', font=font)
 
-    print('write output image: {}{}_quant.jpg'.format(output_dir, name))
     np.copyto(img, np.array(img_pil))
     cv2.imwrite("{}{}_quant.jpg".format(output_dir, name), img)
-    print('write output image finished.')
+    print('Saved detection results to {}{}_quant.jpg'.format(output_dir, name))
 
 
 if __name__ == '__main__':
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
 
     # Create RKNN object
     rknn = RKNN()
@@ -181,6 +202,7 @@ if __name__ == '__main__':
     ret = rknn.load_rknn('./ssd_mobilenet_v2.rknn')
     if ret != 0:
         print('Load RKNN model failed')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -190,15 +212,17 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
-    ret = rknn.init_runtime()
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret != 0:
         print('Init runtime environment failed')
+        rknn.release()
         exit(ret)
     print('done')
 
     # Inference
     print('--> Running model')
     outputs = rknn.inference(inputs=[img])
+    # Post process
     ssd_post_process(np.reshape(outputs[0], (-1)), np.reshape(outputs[1], (-1)), './dog_bike_car_300x300.jpg', './')
     print('done')
 

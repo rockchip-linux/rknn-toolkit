@@ -1,3 +1,5 @@
+import platform
+import sys
 import numpy as np
 import cv2
 from rknn.api import RKNN
@@ -22,16 +24,39 @@ def show_outputs(outputs):
 
 
 if __name__ == '__main__':
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
 
     # Create RKNN object
     rknn = RKNN()
     
     # Set model config
     print('--> Config model')
-    rknn.config(mean_values=[[103.94, 116.78, 123.68]], std_values=[[58.82, 58.82, 58.82]], reorder_channel='2 1 0')
+    rknn.config(mean_values=[[103.94, 116.78, 123.68]],
+                std_values=[[58.82, 58.82, 58.82]],
+                reorder_channel='2 1 0',
+                target_platform=[target])
     print('done')
 
-    # Load caffe model
+    # Load model (from https://github.com/shicai/MobileNet-Caffe)
     print('--> Loading model')
     ret = rknn.load_caffe(model='./mobilenet_v2.prototxt',
                           proto='caffe',
@@ -62,7 +87,11 @@ if __name__ == '__main__':
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     print('--> Init runtime environment')
-    ret = rknn.init_runtime()
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret != 0:
         print('Init runtime environment failed')
         exit(ret)

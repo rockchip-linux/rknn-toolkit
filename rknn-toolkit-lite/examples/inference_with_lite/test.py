@@ -29,9 +29,20 @@ def show_top5(result):
 if __name__ == '__main__':
     rknn_lite = RKNNLite()
 
+    if platform.machine() == 'aarch64':
+        target = None
+        model = './resnet18_rk180x.rknn'
+    elif platform.machine() == 'armv7l':
+        target = None
+        model = './resnet18_rv1109_rv1126.rknn'
+    else:
+        print('Please run on PC. The default device is RK1808, if not, please specify the target and model path in script: test.py.')
+        target = 'rk1808'
+        model = './resnet18_rk180x.rknn'
+
     # load RKNN model
     print('--> Load RKNN model')
-    ret = rknn_lite.load_rknn('./resnet_18.rknn')
+    ret = rknn_lite.load_rknn(model)
     if ret != 0:
         print('Load RKNN model failed')
         exit(ret)
@@ -42,11 +53,6 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
-    # run on RK3399Pro/RK1808 with Debian OS, do not need specify target.
-    if platform.machine() == 'aarch64':
-        target = None
-    else:
-        target = 'rk1808'
     ret = rknn_lite.init_runtime(target=target)
     if ret != 0:
         print('Init runtime environment failed')

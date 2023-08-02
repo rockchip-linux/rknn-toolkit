@@ -1,5 +1,7 @@
 import numpy as np
 
+import platform
+import sys
 import re
 import math
 import random
@@ -23,7 +25,7 @@ def expit(x):
 
 
 def unexpit(y):
-    return -1.0 * math.log((1.0 / y) - 1.0);
+    return -1.0 * math.log((1.0 / y) - 1.0)
 
 
 def CalculateOverlap(xmin0, ymin0, xmax0, ymax0, xmin1, ymin1, xmax1, ymax1):
@@ -56,23 +58,47 @@ def load_box_priors():
 
 
 if __name__ == '__main__':
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
 
     # Create RKNN object
     rknn = RKNN()
 
     # Config for Model Input PreProcess
     print('--> Config model')
-    rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]], reorder_channel='0 1 2')
+    rknn.config(mean_values=[[127.5, 127.5, 127.5]],
+                std_values=[[127.5, 127.5, 127.5]],
+                reorder_channel='0 1 2',
+                target_platform=[target])
     print('done')
 
-    # Load TensorFlow Model
+    # Load TensorFlow Model (Download from http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_2018_01_28.tar.gz)
     print('--> Loading model')
-    ret = rknn.load_tensorflow(tf_pb='./ssd_mobilenet_v1_coco_2017_11_17.pb',
+    ret = rknn.load_tensorflow(tf_pb='./ssd_mobilenet_v1_coco_2018_01_28.pb',
                                inputs=['FeatureExtractor/MobilenetV1/MobilenetV1/Conv2d_0/BatchNorm/batchnorm/mul_1'],
                                outputs=['concat', 'concat_1'],
                                input_size_list=[[INPUT_SIZE, INPUT_SIZE, 3]])
     if ret != 0:
         print('Load model failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -81,6 +107,7 @@ if __name__ == '__main__':
     ret = rknn.build(do_quantization=True, dataset='./dataset.txt')
     if ret != 0:
         print('Build model failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -89,11 +116,9 @@ if __name__ == '__main__':
     rknn.export_rknn('./ssd_mobilenet_v1_coco.rknn')
     if ret != 0:
         print('Export RKNN model failed!')
+        rknn.release()
         exit(ret)
     print('done')
-
-    # Direct Load RKNN Model
-    # rknn.load_rknn('./ssd_mobilenet_v1_coco.rknn')
 
     # Set inputs
     orig_img = cv2.imread('./road.bmp')
@@ -102,9 +127,14 @@ if __name__ == '__main__':
 
     # init runtime environment
     print('--> Init runtime environment')
-    ret = rknn.init_runtime()
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret != 0:
         print('Init runtime environment failed')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -128,7 +158,7 @@ if __name__ == '__main__':
 
         # Skip the first catch-all class.
         for j in range(1, NUM_CLASSES):
-            score = expit(outputClasses[0][i][j]);
+            score = expit(outputClasses[0][i][j])
 
             if score > topClassScore:
                 topClassScoreIndex = j
@@ -203,12 +233,8 @@ if __name__ == '__main__':
         cv2.rectangle(orig_img, (int(xmin), int(ymin)), (int(xmax), int(ymax)),
                       (random.random()*255, random.random()*255, random.random()*255), 3)
 
-    cv2.imwrite("out.jpg", orig_img)
-
-    # Evaluate Perf on Simulator
-    print('--> Evaluate model performance')
-    rknn.eval_perf(inputs=[img], is_print=True)
-    print('done')
+    cv2.imwrite("results.jpg", orig_img)
+    print("The detection results have been saved to results.jpg")
 
     # Release RKNN Context
     rknn.release()

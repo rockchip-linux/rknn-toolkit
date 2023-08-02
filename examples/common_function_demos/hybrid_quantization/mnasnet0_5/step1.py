@@ -1,13 +1,44 @@
+import sys
 from rknn.api import RKNN
+import torch
+import torchvision.models as models
+
+
+def export_pytorch_model():
+    net = models.mnasnet0_5(pretrained=True)
+    net.eval()
+    trace_model = torch.jit.trace(net, torch.Tensor(1, 3, 224, 224))
+    trace_model.save('./mnasnet0_5.pt')
 
 if __name__ == '__main__':
+    # Default target platform
+    target = 'rv1126'
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) > 2:
+        print('Too much arguments')
+        print('Usage: python {} [target]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126'.format(
+            sys.argv[0]))
+        exit(-1)
+
+    # Export mnasnet0_5 torchscript model
+    export_pytorch_model()
 
     # Create RKNN object
     rknn = RKNN()
     
     # model config
     print('--> Config model')
-    rknn.config(mean_values=[[123.675, 116.28, 103.53]], std_values=[[58.395, 58.395, 58.395]], reorder_channel='0 1 2')
+    rknn.config(mean_values=[[123.675, 116.28, 103.53]],
+                std_values=[[58.395, 58.395, 58.395]],
+                reorder_channel='0 1 2',
+                target_platform=[target])
     print('done')
 
     # Load Pytorch model
@@ -15,6 +46,7 @@ if __name__ == '__main__':
     ret = rknn.load_pytorch(model='./mnasnet0_5.pt', input_size_list=[[3, 224, 224]])
     if ret != 0:
         print('Load model failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -23,6 +55,7 @@ if __name__ == '__main__':
     ret = rknn.hybrid_quantization_step1(dataset='./dataset.txt')
     if ret != 0:
         print('hybrid_quantization_step1 failed!')
+        rknn.release()
         exit(ret)
     print('done')
 

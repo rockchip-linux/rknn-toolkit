@@ -1,7 +1,8 @@
+import platform
+import sys
 import torch
 import cv2
 import numpy as np
-import tensorflow
 from rknn.api import RKNN
 import torchvision
 
@@ -60,13 +61,38 @@ def main():
     print('*'*20)
 
     prepare_model()
+
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
+
     rknn = RKNN(verbose=False, verbose_file='./verbose_log.txt')
 
     # pre-process config
     print('--> Set config model')
-    rknn.config(quantize_input_node=True,
+    rknn.config(
+                quantize_input_node=True,
                 merge_dequant_layer_and_output_node=True,
-    )
+                target_platform=[target],
+                optimization_level=3,
+                )
     print('done')
 
     # Load Pytorch model
@@ -74,6 +100,7 @@ def main():
     ret = rknn.load_pytorch(model=model_path, input_size_list=[[3, 224, 224]])
     if ret != 0:
         print('Load Pytorch model failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -82,6 +109,7 @@ def main():
     ret = rknn.build(do_quantization=False, dataset='dataset.txt')
     if ret != 0:
         print('Build model failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -90,16 +118,21 @@ def main():
     ret = rknn.export_rknn('quantized_mobilenet.rknn')
     if ret != 0:
         print('Export quantized_mobilenet.rknn failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
 
     # Init runtime environment
     print('--> Init runtime environment')
-    # ret = rknn.init_runtime()
-    ret = rknn.init_runtime(target='rk1808', device_id='1808')
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret != 0:
         print('Init runtime environment failed')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -117,7 +150,7 @@ def main():
     #! NOTE:
     # rknn_model got 70.0 accuracy on imagenet_1000
     # pt_i8 got 61.5 accuracy on imagenet_1000
-    # pt_float got 61.2 accuracy on imagenet_1000
+    # pt_i8 got 71.658 accuracy refer to torchvsion discription 
     rknn.release()
 
     torch.backends.quantized.engine = 'qnnpack'

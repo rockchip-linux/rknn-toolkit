@@ -1,1 +1,10 @@
-RKNN Toolkit does not support exporting precompiled rknn models from Windows and MacOS via the build() interface. The precompiled model needs to be exported via the interface export_rknn_precompile_model(). This interface requires a connection to the RK1808 device. (Note that RK3399pro does not support this feature)
+# Online pre-compilation
+## Usage
+Execute command below to export pre-compilation RKNN model with specified target.
+```
+python eval_perf xxx.rknn xxx.rknn xxx_precompile.rknn [target] [device_id]
+```
+- xxx.rknn: the RKNN model path.
+- xxx_precompile.rknn: the pre-compiled RKNN model path.
+- target: target device, like rv1109, rv1126, rk1808 or rk3399pro. Optional, default target is `rv1126`.
+- device_id: target device id. Optional.

@@ -1,13 +1,13 @@
-import os
-import time
+import platform
 import sys
+import os
 import numpy as np
 import cv2
 from rknn.api import RKNN
 
 
 ONNX_MODEL = 'shufflenet-v2_quant.onnx'
-IMG_PATH = 'dog_224x224.jpg'
+IMG_PATH = './test_images/dog_224x224.jpg'
 RKNN_MODEL = './shufflenet-v2_quant.rknn'
 
 
@@ -43,25 +43,30 @@ def readable_speed(speed):
         return "{:.2f} KB/s".format(speed_kbytes)
 
 
-def show_progress(blocknum, blocksize, totalsize):
-    speed = (blocknum * blocksize) / (time.time() - start_time)
-    speed_str = " Speed: {}".format(readable_speed(speed))
-    recv_size = blocknum * blocksize
-
-    f = sys.stdout
-    progress = (recv_size / totalsize)
-    progress_str = "{:.2f}%".format(progress * 100)
-    n = round(progress * 50)
-    s = ('#' * n).ljust(50, '-')
-    f.write(progress_str.ljust(8, ' ') + '[' + s + ']' + speed_str)
-    f.flush()
-    f.write('\r\n')
-
-
 if __name__ == '__main__':
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
 
     # Create RKNN object
-    rknn = RKNN(verbose=False, verbose_file='./verbose_log.txt')
+    rknn = RKNN(verbose=False)
 
     if not os.path.exists(ONNX_MODEL):
         print('no model exist')
@@ -75,6 +80,7 @@ if __name__ == '__main__':
                 optimization_level=3,
                 quantize_input_node=True,
                 merge_dequant_layer_and_output_node=True,
+                target_platform=[target]
                 )
     print('done')
 
@@ -83,6 +89,7 @@ if __name__ == '__main__':
     ret = rknn.load_onnx(model=ONNX_MODEL)
     if ret != 0:
         print('Load shufflenet failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -91,6 +98,7 @@ if __name__ == '__main__':
     ret = rknn.build(do_quantization=False, dataset='dataset.txt')
     if ret != 0:
         print('Build shufflenet failed!')
+        rknn.release()
         exit(ret)
     print('done')
 
@@ -101,21 +109,24 @@ if __name__ == '__main__':
     ret = rknn.export_rknn(RKNN_MODEL)
     if ret != 0:
         print('Export shufflenet.rknn failed!')
+        rknn.release()
         exit(ret)
     print('done')
-
 
     # Set inputs
     img = cv2.imread(IMG_PATH)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-
     # init runtime environment
     print('--> Init runtime environment')
-    ret = rknn.init_runtime(target='rk1808', device_id='1808')
-    # ret = rknn.init_runtime()
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret != 0:
         print('Init runtime environment failed')
+        rknn.release()
         exit(ret)
     print('done')
 

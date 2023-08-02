@@ -1,16 +1,68 @@
-## 单通道输入Demo
+# Single channel input demo
 
-1. 当模型的输入是单通道，即channel维度为1时，建议用户将所有量化数据集预先处理成npy格式保存。这样可以避免在读取灰度图时，因为代码实现上的差异而引起量化误差。
+## Model Source
 
-   Demo中的处理方式如下：
+The mnist_cnn.pt model is trained based on pytorch example https://github.com/pytorch/examples/blob/main/mnist/main.py . Notice that the inference result could be different if training on different pytorch versions. 
 
-   ```python
-   img = cv2.imread(jpg_data_path) 
-   gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-   gray_img = gray_img.reshape(28, 28, 1) # hw --> hwc, this is important, don't miss it
-   np.save(npy_data_path, gray_img)
-   ```
 
-2. 请注意，如果模型的原始输入是nchw格式的，而灰度图的没有channel维度、尺寸为 hw时，我们需要额外添加channel维度，如上文的代码中第三句代码的处理方式。
 
-3. 当模型的原始输入是3维度或2维的情况时，RKNN模型在量化、推理时候则不会对输入进行 hwc -> chw 的转换操作，此时无需对灰度图补充 channel 维度，数据依照原格式保存成 npy 文件即可。
+## Usage for the script
+
+*Usage:*
+
+```
+python test.py [target] [device_id]
+```
+
+*Parameter Description:*
+
+- target: target platform. Optional parameter, the default value is `rv1126`, you can fill in `rk1806`, `rk1808`, `rk3399pro`, `rv1109`, `rv1126`.
+- device_id: Device ID, when multiple devices are connected, this parameter is used to distinguish them. Optional parameter, default value is None.
+
+If the target device is `RV1109` or `RV1126`, you can directly execute the following command to run the example:
+
+```
+python test.py
+```
+
+If the target device is RK1806, RK1808 or RK3399Pro, you can execute the following command to run the example:
+
+```
+python test.py rk1808
+```
+
+If you connect multiple devices, you need to specify the device ID, please refer to the following command to run the example::
+
+```
+python test.py rv1126 c3d9b8674f4b94f6
+```
+
+
+
+## Expected results
+
+The example would print the predicted digit and corresponding scores as follows:
+
+```
+--> RKNN result
+  The digit number is 1, with predicted confidence as 1.0
+(Due to different RKNN versions, confidence may be close but not the same, such as 0.9999)
+--> PT result
+  The digit number is 1, with predicted confidence as 1.0
+```
+
+
+
+## Notice
+
+If npy file is used for quantization, the npy data shape should be like **hwc** instead of **hw**. In test.py, it's done as follows code:
+
+```
+def prepare_data(jpg_data_path, npy_data_path, dataset_path):
+    img = cv2.imread(jpg_data_path) 
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray_img = gray_img.reshape(28, 28, 1) # hw --> hwc, this is important, don't miss it
+    np.save(npy_data_path, gray_img)
+    with open(dataset_path, 'w') as F:
+        F.write(npy_data_path)
+```

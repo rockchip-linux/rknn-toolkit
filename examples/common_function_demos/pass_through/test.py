@@ -9,6 +9,7 @@ import os
 import time
 import urllib
 import traceback
+import platform
 
 from rknn.api import RKNN
 
@@ -117,21 +118,43 @@ def deeplabv3_post_process(img, inference_result):
     vis_segmentation(resized_im, seg_map)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--pass-through",
-                        dest='pass_through',
-                        action='store_true',
-                        help='Whether pass through input data to RKNN model.')
-    parser.add_argument('--load-rknn',
-                        dest='load_rknn',
-                        action='store_true',
-                        help='Whether load RKNN model directly.')
-    args = parser.parse_args()
+    if len(sys.argv) not in [1, 2, 3, 4, 5]:
+        print('Usage: python {} [pass_through] [use_rknn] [target] [device_id]'.format(
+            sys.argv[0]))
+        print('     pass_through: 0 or 1, 0 means runtime need do preprocess, otherwise pass thourgh input data to RKNN model.')
+        print('     use_rknn: 0 or 1. If set to 0, need to do model conversion; otherwise, using RKNN model directly.')
+        print('Such as: python {} 1 0 rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
 
-    pass_through = args.pass_through
+    pass_through = True
+    use_rknn = False
 
-    LOAD_RKNN = args.load_rknn
+    # default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    if len(sys.argv) == 1:
+        print('Use default target: {}. Need to do model conversion. Pass through input data to RKNN model.')
+    elif len(sys.argv) == 2:
+        pass_through = True if sys.argv[1] == '1' else False
+        print('Use default target: {}. Need to do model conversion. Pass through input data to RKNN model.')
+    elif len(sys.argv) == 3:
+        pass_through = True if sys.argv[1] == '1' else False
+        use_rknn = True if sys.argv[2] == '1' else False
+        print('Use default target: {}.'.format(target))
+    elif len(sys.argv) == 4:
+        pass_through = True if sys.argv[1] == '1' else False
+        use_rknn = True if sys.argv[2] == '1' else False
+        target = sys.argv[3]
+    elif len(sys.argv) == 5:
+        pass_through = True if sys.argv[1] == '1' else False
+        use_rknn = True if sys.argv[2] == '1' else False
+        target = sys.argv[3]
+        device_id = sys.argv[4]
+
     PB_MODEL = './deeplab-v3-plus-mobilenet-v2.pb'
+    RKNN_MODEL = './deeplab-v3-plus-mobilenet-v2.rknn'
 
     # Create RKNN object
     rknn = RKNN()
@@ -148,7 +171,13 @@ if __name__ == '__main__':
             print(traceback.format_exc())
         print('done')
 
-    if not LOAD_RKNN:
+    if not use_rknn:
+        # set config refer to pass_througn value.
+        rknn.config(mean_values=[[127.5, 127.5, 127.5]],
+                    std_values=[[127.5, 127.5, 127.5]],
+                    reorder_channel='0 1 2',
+                    target_platform=[target])
+
         # Load tensorflow model
         print('--> Loading model')
         ret = rknn.load_tensorflow(tf_pb=PB_MODEL,
@@ -157,38 +186,46 @@ if __name__ == '__main__':
                                    input_size_list=[[513, 513, 3]])
         if ret != 0:
             print('load_tensorflow failed')
+            rknn.release()
             exit(ret)
         print('done')
-
-        # set config refer to pass_througn value.
-        rknn.config(mean_values=[[127.5, 127.5, 127.5]], std_values=[[127.5, 127.5, 127.5]], reorder_channel='0 1 2')
 
         # Build model
         print('--> Building model')
         ret = rknn.build(do_quantization=True, dataset='./dataset.txt', pre_compile=False)
         if ret != 0:
             print('build rknn model failed')
+            rknn.release()
             exit(ret)
         print('done')
 
         # Export rknn model
-        ret = rknn.export_rknn('./deeplab-v3-plus-mobilenet-v2.rknn')
+        print('--> Export RKNN model')
+        ret = rknn.export_rknn(RKNN_MODEL)
         if ret != 0:
             print('export rknn model failed')
+            rknn.release()
             exit(ret)
         print('done')
     else:
         print('--> Load model')
-        ret = rknn.load_rknn(path='./deeplab-v3-plus-mobilenet-v2.rknn')
+        ret = rknn.load_rknn(RKNN_MODEL)
         if ret < 0:
             print('load model failed.')
+            rknn.release()
+            exit(ret)
         print('done')
 
     # init runtime 
     print('--> init runtime')
-    ret = rknn.init_runtime(target='rk1808', device_id='1808')
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret < 0:
         print('init runtime failed')
+        rknn.release()
         exit(ret)
     print('done')
 

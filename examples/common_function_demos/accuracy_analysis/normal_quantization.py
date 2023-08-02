@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 from rknn.api import RKNN
 
@@ -24,13 +25,30 @@ def show_outputs(outputs):
 
 
 if __name__ == '__main__':
+    # Default target platform
+    target = 'rv1126'
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    else:
+        print('Too much arguments')
+        print('Usage: python {} [target]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126'.format(sys.argv[0]))
+        exit(-1)
 
     # Create RKNN object
     rknn = RKNN()
     
     # pre-process config
     print('--> Config model')
-    rknn.config(mean_values=[[123.68, 116.28, 103.53]], std_values=[[57.38, 57.38, 57.38]], reorder_channel='0 1 2')
+    rknn.config(mean_values=[[123.68, 116.28, 103.53]],
+                std_values=[[57.38, 57.38, 57.38]],
+                reorder_channel='0 1 2',
+                target_platform=[target])
     print('done')
 
     # Load ONNX model

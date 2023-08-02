@@ -24,6 +24,7 @@ if __name__ == '__main__':
     ret = rknn.export_encrypted_rknn_model(orig_rknn, encrypt_rknn, encrypt_level)
     if ret != 0:
         print('Encrypt RKNN model failed!')
+        rknn.release()
         exit(ret)
     print('done')
 

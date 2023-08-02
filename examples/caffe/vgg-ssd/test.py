@@ -1,3 +1,5 @@
+import platform
+import sys
 import os
 import math
 import numpy as np
@@ -144,16 +146,35 @@ def ssd_post_process(conf_data, loc_data):
         draw.text((x1+margin, text_bottom-text_height-margin), display_str, fill='black', font=font)
 
     np.copyto(img, np.array(img_pil))
-    cv2.imwrite("result.jpg", img)
+    cv2.imwrite("results.jpg", img)
+    print("The detection results have been saved to results.jpg")
 
 
 if __name__ == '__main__':
+    # Default target and device_id
+    target = 'rv1126'
+    device_id = None
+
+    # Parameters check
+    if len(sys.argv) == 1:
+        print("Using default target rv1126")
+    elif len(sys.argv) == 2:
+        target = sys.argv[1]
+        print('Set target: {}'.format(target))
+    elif len(sys.argv) == 3:
+        target = sys.argv[1]
+        device_id = sys.argv[2]
+        print('Set target: {}, device_id: {}'.format(target, device_id))
+    elif len(sys.argv) > 3:
+        print('Too much arguments')
+        print('Usage: python {} [target] [device_id]'.format(sys.argv[0]))
+        print('Such as: python {} rv1126 c3d9b8674f4b94f6'.format(
+            sys.argv[0]))
+        exit(-1)
 
     if not os.path.exists('./VGG_VOC0712_SSD_300x300_iter_120000.caffemodel'):
        print('!!! Missing VGG_VOC0712_SSD_300x300_iter_120000.caffemodel !!!\n' \
-             '1. Download models_VGGNet_VOC0712_SSD_300x300.tar.gz from https://drive.google.com/file/d/0BzKzrI_SkD1_WVVTSmQxU0dVRzA/view\n' \
-             '2. Extract the VGG_VOC0712_SSD_300x300_iter_120000.caffemodel from models_VGGNet_VOC0712_SSD_300x300.tar.gz\n' \
-             '3. Or you can also download caffemodel from https://eyun.baidu.com/s/3jJhPRzo , password is rknn\n')
+             '1. Please download caffemodel from https://eyun.baidu.com/s/3jJhPRzo , fetch code is: rknn\n')
        exit(-1) 
 
     # Create RKNN object
@@ -161,7 +182,10 @@ if __name__ == '__main__':
 
     # Set model config
     print('--> Config model')
-    rknn.config(mean_values=[[103.94, 116.78, 123.68]], std_values=[[1, 1, 1]], reorder_channel='2 1 0')
+    rknn.config(mean_values=[[103.94, 116.78, 123.68]],
+                std_values=[[1, 1, 1]],
+                reorder_channel='2 1 0',
+                target_platform=[target])
     print('done')
 
     # Load caffe model
@@ -195,7 +219,11 @@ if __name__ == '__main__':
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     print('--> Init runtime environment')
-    ret = rknn.init_runtime()
+    if target.lower() == 'rk3399pro' and platform.machine() == 'aarch64':
+        print('Run demo on RK3399Pro, using default NPU.')
+        target = None
+        device_id = None
+    ret = rknn.init_runtime(target=target, device_id=device_id)
     if ret != 0:
         print('Init runtime environment failed')
         exit(ret)
@@ -206,6 +234,7 @@ if __name__ == '__main__':
     outputs = rknn.inference(inputs=[img])
     print('done')
 
+    # Post process: get detected objects, corresponding scores and coordinates
     outputs[0] = outputs[0].reshape((-1, 1))
     outputs[1] = outputs[1].reshape((-1, 1))
     ssd_post_process(outputs[1], outputs[0])
