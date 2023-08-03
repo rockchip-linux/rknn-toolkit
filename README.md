@@ -43,6 +43,11 @@ efe50cbb488c49f4953ff156caef6d07  rknn_toolkit_lite-1.7.5-cp38-cp38-linux_aarch6
 59f3f1df13bad289daadab276684c8df  rknn_toolkit_lite-1.7.5-cp38-cp38-linux_x86_64.whl
 63868f54eae2c98da69679abf4710881  rknn_toolkit_lite-1.7.5-cp39-cp39-linux_aarch64.whl
 ```
+
+# Notes
+- Currently rknn-toolkit is not compatible with [rknn-toolkit2](https://github.com/rockchip-linux/rknn-toolkit2)
+- Latest version: 1.7.5(Release version)
+
 # Feedback and Community Support
 - QQ Group Chat: 1025468710 (full, please join group 2)
 - QQ Group Chat2: 547021958 
