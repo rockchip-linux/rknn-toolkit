@@ -34,7 +34,7 @@ python test.py rv1126 c3d9b8674f4b94f6
 
 ## Expected results
 
-The test result should be similar to picutre `ref_detect_result.jpg`.
+The test result should be similar to picutre `ref_detect_results.jpg`.
 
 *Note: Different platforms, different versions of tools and drivers may have slightly different results.*
 
